@@ -47,7 +47,7 @@
 			(<bean:write name="infoSiteStudentTestFeedback" property="studentTestLog.distributedTest.externalId"/>)</td>
 		</tr>
 		<tr>
-			<td><b><bean:message key="label.thesis.file.name.uploadTime"/></b></td>
+			<td><b><bean:message key="label.date" bundle="APPLICATION_RESOURCES"/></b></td>
 			<td><bean:write name="infoSiteStudentTestFeedback" property="studentTestLog.dateFormatted"/></td>
 		</tr>
 		<tr>
