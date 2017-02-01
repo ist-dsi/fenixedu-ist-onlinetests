@@ -17,6 +17,10 @@
     <url>http://tecnico.ulisboa.pt/</url>
     <inceptionYear>2011</inceptionYear>
 
+    <properties>
+        <version.org.mathjax.mathjax>2.3</version.org.mathjax.mathjax>
+    </properties>
+
     <issueManagement>
         <system>GitHub</system>
         <url>https://github.com/ist-dsi/fenixedu-ist-onlinetests/issues/</url>
@@ -47,6 +51,11 @@
             <groupId>org.fenixedu</groupId>
             <artifactId>fenixedu-academic</artifactId>
             <version>5.0.0.RC1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mathjax</groupId>
+            <artifactId>mathjax</artifactId>
+            <version>${version.org.mathjax.mathjax}</version>
         </dependency>
     </dependencies>
 
