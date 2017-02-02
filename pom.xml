@@ -19,6 +19,7 @@
 
     <properties>
         <version.org.mathjax.mathjax>2.3</version.org.mathjax.mathjax>
+        <version.org.fenixedu.fenixedu-academic>5.5.1</version.org.fenixedu.fenixedu-academic>
     </properties>
 
     <issueManagement>
@@ -50,7 +51,7 @@
         <dependency>
             <groupId>org.fenixedu</groupId>
             <artifactId>fenixedu-academic</artifactId>
-            <version>5.0.0.RC1</version>
+            <version>${version.org.fenixedu.fenixedu-academic}</version>
         </dependency>
         <dependency>
             <groupId>org.mathjax</groupId>
