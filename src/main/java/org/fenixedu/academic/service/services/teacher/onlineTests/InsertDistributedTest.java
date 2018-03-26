@@ -144,7 +144,7 @@ public class InsertDistributedTest {
         @Override
         public void run() {
             try {
-                Authenticate.mock(userView);
+                Authenticate.mock(userView, "Authenticate Creator User");
                 doIt();
                 distributedTestId = tempDistributedTestId;
             } finally {
