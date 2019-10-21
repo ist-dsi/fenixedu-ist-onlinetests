@@ -602,7 +602,7 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
         final ExecutionCourse executionCourse = getExecutionCourse(request);
         final List<Registration> studentList = new ArrayList<Registration>();
         for (final Attends attends : executionCourse.getAttendsSet()) {
-            if (!studentList.contains(attends.getRegistration()) && attends.getRegistration().isActive()) {
+            if (!studentList.contains(attends.getRegistration())) {
                 studentList.add(attends.getRegistration());
             }
         }
@@ -780,7 +780,7 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
         final DistributedTest distributedTest = FenixFramework.getDomainObject(distributedTestCode);
         final Set<Registration> students = distributedTest.findStudents();
         for (Attends attend : attendList) {
-            if (!students.contains(attend.getRegistration()) && attend.getRegistration().isActive()) {
+            if (!students.contains(attend.getRegistration())) {
                 studentList.add(attend.getRegistration());
             }
         }

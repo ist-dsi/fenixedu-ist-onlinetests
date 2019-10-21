@@ -1,18 +1,18 @@
 /**
  * Copyright © 2002 Instituto Superior Técnico
- *
+ * <p>
  * This file is part of FenixEdu Core.
- *
+ * <p>
  * FenixEdu Core is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * FenixEdu Core is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with FenixEdu Core.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -47,13 +47,11 @@ public class ReadExecutionCoursesByStudentTests {
         check(RolePredicates.STUDENT_PREDICATE);
         final Set<ExecutionCourse> executionCourses = new HashSet<ExecutionCourse>();
         for (final Registration registration : student.getRegistrationsSet()) {
-            if (registration.isActive()) {
-                for (Attends attend : registration.getAssociatedAttendsSet()) {
-                    final ExecutionCourse executionCourse = attend.getExecutionCourse();
-                    if (executionCourse.getExecutionYear().equals(executionYear)
-                            && DistributedTest.getDistributedTestsByExecutionCourse(student, executionCourse).size() != 0) {
-                        executionCourses.add(executionCourse);
-                    }
+            for (Attends attend : registration.getAssociatedAttendsSet()) {
+                final ExecutionCourse executionCourse = attend.getExecutionCourse();
+                if (executionCourse.getExecutionYear().equals(executionYear)
+                        && DistributedTest.getDistributedTestsByExecutionCourse(student, executionCourse).size() != 0) {
+                    executionCourses.add(executionCourse);
                 }
             }
         }

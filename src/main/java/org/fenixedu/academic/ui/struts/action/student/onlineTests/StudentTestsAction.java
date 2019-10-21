@@ -140,7 +140,7 @@ public class StudentTestsAction extends FenixDispatchAction {
 
             Set<DistributedTest> distributedTests = distributedTestList.get(registration);
             for (DistributedTest distributedTest : distributedTests) {
-                if (testsToDo(distributedTest) && registration.isActive()) {
+                if (testsToDo(distributedTest)) {
                     testToDoList.add(distributedTest);
                 } else if (doneTests(distributedTest)) {
                     doneTestsList.add(distributedTest);
