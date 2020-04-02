@@ -1161,7 +1161,7 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
             request.setAttribute("changesType", changesType);
             return chooseAnotherExercise(mapping, form, request, response);
         }
-        return doForward(request, "showStudentTestCorrection");
+       return showStudentTest(mapping, form, request, response);
     }
 
     public ActionForward prepareChangeStudentTestQuestionValue(ActionMapping mapping, ActionForm form,
