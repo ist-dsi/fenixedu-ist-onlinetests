@@ -74,7 +74,7 @@ public class ParseSubQuestion extends DefaultHandler {
 
     private List<QuestionElement> questionElementList;
 
-    private boolean questionPresentation = false, question = false, option = false, response = false, feedback = false;
+    private boolean questionPresentation = false, question = false, option = false, response = false, feedback = false, invalidFeedback=false;
 
     private static final Element NOT_ELEMENT = new Element(null, "not", "not", null);
 
@@ -103,7 +103,11 @@ public class ParseSubQuestion extends DefaultHandler {
         } catch (Exception e) {
             throw new ParseQuestionException(e);
         }
-        return createSubQuestion(questionElementList.iterator().next());
+        SubQuestion subQuestion = createSubQuestion(questionElementList.iterator().next());
+        if (invalidFeedback) {
+            throw new ParseQuestionException();
+        }
+        return subQuestion;
     }
 
     public StudentTestQuestion parseStudentTestQuestion(StudentTestQuestion studentTestQuestion) throws Exception,
@@ -506,6 +510,15 @@ public class ParseSubQuestion extends DefaultHandler {
                                         "Uma das soluÃ§Ãµes indicadas no ficheiro tem mais do que uma resposta, e uma pergunta de escolha simples apenas admite uma resposta.");
                             }
                         }
+						if (subQuestion.getQuestionType().getType().intValue() == QuestionType.NUM) {
+							try {
+								Double.parseDouble(element.getValue());
+							} catch (NumberFormatException e) {
+								invalidFeedback = true;
+								// throw new ParseQuestionException(
+								// "Uma das soluÃ§Ãµes indicadas no ficheiro tem um formato inválido.");
+							}
+						}
                         responseProcessing.getResponseConditions().add(
                                 new ResponseCondition(tagName, element.getValue(), atts.getValue("respident")));
                     }
