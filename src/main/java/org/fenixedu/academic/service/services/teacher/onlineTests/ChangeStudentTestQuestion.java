@@ -183,7 +183,7 @@ public class ChangeStudentTestQuestion {
 
             if (canDelete) {
                 oldQuestion.delete();
-                if (metadata.getQuestionsSet().size() <= 1) {
+                if (metadata.getQuestionsSet().size() == 0) {
                     metadata.delete();
                 }
             } else {
