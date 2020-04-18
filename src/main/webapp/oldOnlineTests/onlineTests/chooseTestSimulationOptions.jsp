@@ -91,10 +91,11 @@ function changeInformation(value) {
 <html:form action="/studentTestManagement">
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.page" property="page" value="1"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="prepareSimulateTest"/>
-<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.objectCode" property="objectCode" value="<%=(pageContext.findAttribute("objectCode")).toString()%>"/>
+	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.objectCode" property="objectCode" value="<%=(pageContext.findAttribute("executionCourseID")).toString()%>"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.testCode" property="testCode" value="<%=(pageContext.findAttribute("testCode")).toString()%>"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.inquiryInformation" property="inquiryInformation"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.notInquiryInformation" property="notInquiryInformation"/>
+<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.notInquiryInformation" property="executionCourseID" value="<%=(pageContext.findAttribute("executionCourseID")).toString()%>"/>
 
 <table>
 	<tr>

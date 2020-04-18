@@ -32,22 +32,32 @@
 	</logic:equal>
 	
 	<logic:notEqual name="availableMetadatas" value="0">
-		<html:form action="/testsManagement">
-		<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.page" property="page" value="1"/>
-		<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="createTest"/>
-		<input type="hidden" name="executionCourseID" value="${executionCourseID}" />
-		<table><tr><td class="infoop"><bean:message key="message.createTest.information" /></td></tr></table>
-		<br/><br/>
-		<table>
-			<tr><td><bean:message key="label.test.title"/></td></tr>
-			<tr><td><html:text bundle="HTMLALT_RESOURCES" altKey="text.title" size="50" property="title"/><span class="error"><!-- Error messages go here --><html:errors /></span></td><tr/>
-			<tr><td><bean:message key="label.test.information"/></td></tr>
-			<tr><td><html:textarea bundle="HTMLALT_RESOURCES" altKey="textarea.information" rows="7" cols="45" property="information"/></td><tr/>
-		</table>
-		<br/><br/>
-		
-		<html:submit bundle="HTMLALT_RESOURCES" altKey="submit.submit" styleClass="inputbutton"><bean:message key="button.continue"/></html:submit> 
-		<html:reset bundle="HTMLALT_RESOURCES" altKey="reset.reset" styleClass="inputbutton"><bean:message key="label.clear"/></html:reset>
+		<html:form action="/testsManagement" styleClass="form-horizontal">
+			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.page" property="page" value="1"/>
+			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="createTest"/>
+			<input type="hidden" name="executionCourseID" value="${executionCourseID}" />
+			<table><tr><td class="infoop"><bean:message key="message.createTest.information" /></td></tr></table>
+			<br/><br/>
+			<div class="form-group">
+				<label class="control-label col-sm-2"><bean:message key="label.test.title"/></label>
+				<div class="col-sm-10">
+					<html:text bundle="HTMLALT_RESOURCES" altKey="text.title" size="75" property="title"/><span class="error"><!-- Error messages go here --><html:errors /></span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2"><bean:message key="label.test.information"/></label>
+				<div class="col-sm-10">
+					<html:textarea bundle="HTMLALT_RESOURCES" altKey="textarea.information" rows="7" cols="75" property="information"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<span class="col-sm-2">
+				</span>
+				<span class="col-sm-10">
+					<html:submit bundle="HTMLALT_RESOURCES" altKey="submit.submit" styleClass="inputbutton"><bean:message key="button.continue"/></html:submit>
+					<html:reset bundle="HTMLALT_RESOURCES" altKey="reset.reset" styleClass="inputbutton"><bean:message key="label.clear"/></html:reset>
+				</span>
+			</div>
 		</html:form>
 	</logic:notEqual>
 </logic:present>
