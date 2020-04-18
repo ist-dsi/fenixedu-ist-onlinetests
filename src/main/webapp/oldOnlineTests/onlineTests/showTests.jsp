@@ -20,9 +20,9 @@
 --%>
 <%@ page language="java"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
-<html:xhtml/>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
+<html:xhtml/>
 <jsp:include page="/includeMathJax.jsp" />
 <h2><bean:message key="title.showTests" /></h2>
 
@@ -40,59 +40,68 @@
 			</tr>
 		</table>
 		<br />
-		<div class="gen-button"><html:link
-			page="<%= "/testsManagement.do?method=prepareCreateTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID")%>">
-			<bean:message key="link.createTest" />
-		</html:link></div>
+		<div class="gen-button">
+			<html:link page="<%= "/testsManagement.do?method=prepareCreateTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID")%>"
+					styleClass="btn btn-primary">
+				<bean:message key="link.createTest" />
+			</html:link></div>
 		<br />
 		<span class="error"><!-- Error messages go here --><html:errors property="InvalidDistribution" /></span>
-		<table>
+		<table class="table">
 			<tr>
-				<th class="listClasses-header"><bean:message key="label.test.title" /></th>
-				<th class="listClasses-header"><bean:message key="label.test.creationDate" /></th>
-				<th class="listClasses-header"><bean:message key="label.test.lastModifiedDate" /></th>
-				<th width="100" class="listClasses-header"><bean:message key="label.test.numberOfQuestions" /></th>
+				<th><bean:message key="label.test.title" /></th>
+				<th><bean:message key="label.test.creationDate" /></th>
+				<th><bean:message key="label.test.lastModifiedDate" /></th>
+				<th width="100"><bean:message key="label.test.numberOfQuestions" /></th>
+				<th></th>
+				<th></th>
+				<th></th>
+				<th></th>
+				<th></th>
 			</tr>
 			<logic:iterate id="test" name="testList" type="org.fenixedu.academic.domain.onlineTests.Test">
 				<tr>
-					<td class="listClasses"><bean:write name="test" property="title" /></td>
-					<td class="listClasses"><bean:write name="test" property="creationDateFormatted" /></td>
-					<td class="listClasses"><bean:write name="test" property="lastModifiedDateFormatted" /></td>
+					<td><bean:write name="test" property="title" /></td>
+					<td><bean:write name="test" property="creationDateFormatted" /></td>
+					<td><bean:write name="test" property="lastModifiedDateFormatted" /></td>
 					<bean:size id="numberOfQuestions" name="test" property="testQuestions"/>
-					<td class="listClasses"><bean:write name="numberOfQuestions" /></td>
+					<td><bean:write name="numberOfQuestions" /></td>
 					<bean:define id="testCode" name="test" property="externalId" />
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/testEdition.do?method=editTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>">
+						page="<%= "/testEdition.do?method=editTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>"
+						styleClass="btn btn-primary">
 						<bean:message key="label.edit" />
 					</html:link></div>
 					</td>
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/testsManagement.do?method=prepareDeleteTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>">
+						page="<%= "/testsManagement.do?method=prepareDeleteTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>"
+						styleClass="btn btn-danger">
 						<bean:message key="link.remove" />
 					</html:link></div>
 					</td>
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/testEdition.do?method=editAsNewTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>">
+						page="<%= "/testEdition.do?method=editAsNewTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>"
+						styleClass="btn btn-default">
 						<bean:message key="label.duplicate" />
 					</html:link></div>
 					</td>
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/testDistribution.do?method=prepareDistributeTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>">
+						page="<%= "/testDistribution.do?method=prepareDistributeTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" + testCode %>"
+						styleClass="btn btn-default">
 						<bean:message key="link.student.room.distribution" />
 					</html:link></div>
 					</td>
-					<%--
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/studentTestManagement.do?method=chooseTestSimulationOptions&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" +testCode %>">
+						page="<%= "/studentTestManagement.do?method=chooseTestSimulationOptions&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;testCode=" +testCode %>"
+						styleClass="btn btn-default">
 						<bean:message key="label.Simulate" />
 					</html:link></div>
 					</td>
-					--%>
 				</tr>
 			</logic:iterate>
 		</table>

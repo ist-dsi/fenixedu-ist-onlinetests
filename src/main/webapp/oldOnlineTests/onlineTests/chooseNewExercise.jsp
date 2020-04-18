@@ -39,7 +39,8 @@
 		<tr>
 			<td>
 			<div class="gen-button"><html:link
-				page="<%= "/exercisesManagement.do?method=prepareChooseExerciseType&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID")%>">
+				page="<%= "/exercisesManagement.do?method=prepareChooseExerciseType&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID")%>"
+				styleClass="btn btn-primary">
 				<bean:message key="label.newExercise" />
 			</html:link></div>
 			</td>
@@ -65,7 +66,7 @@
 		</logic:notPresent>
 		<br />
 		<br />
-		<table>
+		<table class="table">
 			<tr>
 				<th class="listClasses-header">
 				<div class="gen-button"><logic:equal name="order" value="description">
@@ -196,34 +197,36 @@
 					<img hspace="5" border="0" src="<%= request.getContextPath() %>/images/gray_square.gif" alt="<bean:message key="gray_square" bundle="IMAGE_RESOURCES" />" />
 				</logic:notEqual></div>
 				</th>
+				<th class="listClasses-header"></th>
 			</tr>
 			<logic:iterate id="metadata" name="metadataList" type="org.fenixedu.academic.domain.onlineTests.Metadata">
 				<tr>
 					<logic:notEqual name="metadata" property="description" value="">
-						<td class="listClasses"><bean:write name="metadata" property="description" /></td>
+						<td><bean:write name="metadata" property="description" /></td>
 					</logic:notEqual>
 					<logic:equal name="metadata" property="description" value="">
-						<td class="listClasses"><bean:message key="message.tests.notDefined" /></td>
+						<td><bean:message key="message.tests.notDefined" /></td>
 					</logic:equal>
 					<logic:notEqual name="metadata" property="mainSubject" value="">
-						<td class="listClasses"><bean:write name="metadata" property="mainSubject" /></td>
+						<td><bean:write name="metadata" property="mainSubject" /></td>
 					</logic:notEqual>
 					<logic:equal name="metadata" property="mainSubject" value="">
-						<td class="listClasses"><bean:message key="message.tests.notDefined" /></td>
+						<td><bean:message key="message.tests.notDefined" /></td>
 					</logic:equal>
 					<logic:notEqual name="metadata" property="difficulty" value="">
-						<td class="listClasses"><bean:write name="metadata" property="difficulty" /></td>
+						<td><bean:write name="metadata" property="difficulty" /></td>
 					</logic:notEqual>
 					<logic:equal name="metadata" property="difficulty" value="">
-						<td class="listClasses"><bean:message key="message.tests.notDefined" /></td>
+						<td><bean:message key="message.tests.notDefined" /></td>
 					</logic:equal>
 					<bean:size id="numberOfMembers" name="metadata" property="visibleQuestions"/>
-					<td class="listClasses"><bean:write name="numberOfMembers" /></td>
+					<td><bean:write name="numberOfMembers" /></td>
 					<bean:define id="exerciseCode" name="metadata" property="externalId" />
 					<bean:define id="metadataCode" name="metadata" property="externalId" />
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/exercisesManagement.do?method=prepareChooseExerciseType&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")%>">
+						page="<%= "/exercisesManagement.do?method=prepareChooseExerciseType&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")%>"
+						styleClass="btn btn-default">
 						<bean:message key="lable.newVariation" />
 					</html:link></div>
 					</td>

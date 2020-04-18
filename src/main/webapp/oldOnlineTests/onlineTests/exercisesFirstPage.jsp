@@ -86,7 +86,8 @@
 		<tr>
 			<td>
 			<div class="gen-button"><html:link
-				page="<%= "/exercisesManagement.do?method=insertNewExercise&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>">
+				page="<%= "/exercisesManagement.do?method=insertNewExercise&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>"
+				styleClass="btn btn-primary">
 				<bean:message key="link.importExercise" />
 			</html:link></div>
 			</td>
@@ -104,7 +105,7 @@
 		</logic:notPresent>
 		<br />
 		<br />
-		<table>
+		<table class="table">
 			<tr>
 				<th class="listClasses-header">
 				<div class="gen-button"><logic:equal name="order" value="description">
@@ -235,46 +236,52 @@
 					<img hspace="5" border="0" src="<%= request.getContextPath() %>/images/gray_square.gif" alt="<bean:message key="gray_square" bundle="IMAGE_RESOURCES" />" />
 				</logic:notEqual></div>
 				</th>
+				<th class="listClasses-header"></th>
+				<th class="listClasses-header"></th>
+				<th class="listClasses-header"></th>
 			</tr>
 			<logic:iterate id="metadata" name="metadataList" type="org.fenixedu.academic.domain.onlineTests.Metadata">
 				<tr>
 					<logic:notEqual name="metadata" property="description" value="">
-						<td class="listClasses"><bean:write name="metadata" property="description" /></td>
+						<td><bean:write name="metadata" property="description" /></td>
 					</logic:notEqual>
 					<logic:equal name="metadata" property="description" value="">
-						<td class="listClasses"><bean:message key="message.tests.notDefined" /></td>
+						<td><bean:message key="message.tests.notDefined" /></td>
 					</logic:equal>
 					<logic:notEqual name="metadata" property="mainSubject" value="">
-						<td class="listClasses"><bean:write name="metadata" property="mainSubject" /></td>
+						<td><bean:write name="metadata" property="mainSubject" /></td>
 					</logic:notEqual>
 					<logic:equal name="metadata" property="mainSubject" value="">
-						<td class="listClasses"><bean:message key="message.tests.notDefined" /></td>
+						<td><bean:message key="message.tests.notDefined" /></td>
 					</logic:equal>
 					<logic:notEqual name="metadata" property="difficulty" value="">
-						<td class="listClasses"><bean:write name="metadata" property="difficulty" /></td>
+						<td><bean:write name="metadata" property="difficulty" /></td>
 					</logic:notEqual>
 					<logic:equal name="metadata" property="difficulty" value="">
-						<td class="listClasses"><bean:message key="message.tests.notDefined" /></td>
+						<td><bean:message key="message.tests.notDefined" /></td>
 					</logic:equal>
 					<bean:size id="questionsSize" name="metadata" property="visibleQuestions"/>
-					<td class="listClasses"><bean:write name="questionsSize" /></td>
+					<td><bean:write name="questionsSize" /></td>
 					<bean:define id="exerciseCode" name="metadata" property="externalId" />
 					<bean:define id="metadataCode" name="metadata" property="externalId" />
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/exercisesManagement.do?method=prepareEditExercise&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>">
+						page="<%= "/exercisesManagement.do?method=prepareEditExercise&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>"
+						styleClass="btn btn-primary">
 						<bean:message key="label.edit" />
 					</html:link></div>
 					</td>
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/exercisesManagement.do?method=prepareAddExerciseVariation&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>">
+						page="<%= "/exercisesManagement.do?method=prepareAddExerciseVariation&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>"
+						styleClass="btn btn-default">
 						<bean:message key="label.add" />
 					</html:link></div>
 					</td>
 					<td>
 					<div class="gen-button"><html:link
-						page="<%= "/exercisesManagement.do?method=prepareRemoveExercise&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>">
+						page="<%= "/exercisesManagement.do?method=prepareRemoveExercise&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;exerciseCode=" + pageContext.findAttribute("exerciseCode")+ "&amp;order="+ pageContext.findAttribute("order")+"&amp;asc="+pageContext.findAttribute("asc")%>"
+						styleClass="btn btn-danger">
 						<bean:message key="label.delete" />
 					</html:link></div>
 					</td>

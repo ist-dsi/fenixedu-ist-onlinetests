@@ -86,18 +86,20 @@ function invertSelect(){
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="downloadTestMarks" />
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.executionCourseID" property="executionCourseID" value="<%=(pageContext.findAttribute("executionCourseID")).toString()%>" />
 			<span class="error"><!-- Error messages go here --><html:errors /></span>
-			<table>
+			<table class="table">
 				<tr>
-					<td class="listClasses-header"></td>
-					<th class="listClasses-header"><bean:message key="label.test.title" /></th>
-					<th class="listClasses-header"><bean:message key="message.testBeginDate" /></th>
-					<th class="listClasses-header"><bean:message key="message.testEndDate" /></th>
+					<td></td>
+					<th><bean:message key="label.test.title" /></th>
+					<th><bean:message key="message.testBeginDate" /></th>
+					<th><bean:message key="message.testEndDate" /></th>
+					<th></th>
+					<th></th>
 				</tr>
 				<logic:iterate id="distributedTest" name="distributedTests" type="org.fenixedu.academic.domain.onlineTests.DistributedTest">
 					<tr>
 						<bean:define id="testType" name="distributedTest" property="testType.type" />
 						<bean:define id="distributedTestCode" name="distributedTest" property="externalId" />
-						<td class="listClasses"><%if (((Integer) testType).intValue() != 3) {
+						<td><%if (((Integer) testType).intValue() != 3) {
 
         %> <html:multibox bundle="HTMLALT_RESOURCES" altKey="multibox.distributedTestCodes" property="distributedTestCodes">
 							<bean:write name="distributedTestCode" />
@@ -108,15 +110,16 @@ function invertSelect(){
 						</html:multibox> <%}
 
         %></td>
-						<td class="listClasses"><html:link
+						<td><html:link
 							page="<%= "/distributedTestEdition.do?method=prepareEditDistributedTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;distributedTestCode=" + distributedTestCode %>">
 							<bean:write name="distributedTest" property="title" />
 						</html:link></td>
-						<td class="listClasses"><bean:write name="distributedTest" property="beginDateTimeFormatted" /></td>
-						<td class="listClasses"><bean:write name="distributedTest" property="endDateTimeFormatted" /></td>
+						<td><bean:write name="distributedTest" property="beginDateTimeFormatted" /></td>
+						<td><bean:write name="distributedTest" property="endDateTimeFormatted" /></td>
 						<td>
 						<div class="gen-button"><html:link
-							page="<%= "/testDistribution.do?method=prepareDeleteDistributedTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;distributedTestCode=" + distributedTestCode %>">
+							page="<%= "/testDistribution.do?method=prepareDeleteDistributedTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;distributedTestCode=" + distributedTestCode %>"
+							styleClass="btn btn-danger">
 							<bean:message key="link.remove" />
 						</html:link></div>
 						</td>
@@ -131,7 +134,8 @@ function invertSelect(){
 						</td> --%>
 						<td>
 						<div class="gen-button"><html:link
-							page="<%= "/testDistribution.do?method=showTestMarks&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;distributedTestCode=" + distributedTestCode %>">
+							page="<%= "/testDistribution.do?method=showTestMarks&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;distributedTestCode=" + distributedTestCode %>"
+							styleClass="btn btn-primary">
 							<bean:message key="label.test.marks" />
 						</html:link></div>
 						</td>
