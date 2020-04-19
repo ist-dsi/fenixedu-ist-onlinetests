@@ -22,97 +22,30 @@
 
 package org.fenixedu.academic.ui.struts.action.teacher.onlineTests;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.base.Strings;
+import com.google.common.collect.Ordering;
+import com.google.common.io.BaseEncoding;
 import org.apache.commons.beanutils.BeanComparator;
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.DynaActionForm;
+import org.apache.struts.action.*;
 import org.apache.struts.util.LabelValueBean;
-import org.fenixedu.academic.domain.Attends;
-import org.fenixedu.academic.domain.ExecutionCourse;
-import org.fenixedu.academic.domain.ExecutionSemester;
-import org.fenixedu.academic.domain.Person;
-import org.fenixedu.academic.domain.Professorship;
-import org.fenixedu.academic.domain.Shift;
-import org.fenixedu.academic.domain.onlineTests.DistributedTest;
-import org.fenixedu.academic.domain.onlineTests.Metadata;
-import org.fenixedu.academic.domain.onlineTests.Question;
-import org.fenixedu.academic.domain.onlineTests.StudentTestLog;
-import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
-import org.fenixedu.academic.domain.onlineTests.Test;
-import org.fenixedu.academic.domain.onlineTests.TestQuestion;
-import org.fenixedu.academic.domain.onlineTests.TestScope;
+import org.fenixedu.academic.domain.*;
+import org.fenixedu.academic.domain.onlineTests.*;
 import org.fenixedu.academic.domain.onlineTests.utils.ParseSubQuestion;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.dto.InfoStudent;
 import org.fenixedu.academic.dto.comparators.CalendarDateComparator;
 import org.fenixedu.academic.dto.comparators.CalendarHourComparator;
 import org.fenixedu.academic.dto.comparators.MetadataComparator;
-import org.fenixedu.academic.dto.onlineTests.InfoInquiryStatistics;
-import org.fenixedu.academic.dto.onlineTests.InfoSiteStudentTestFeedback;
-import org.fenixedu.academic.dto.onlineTests.InfoSiteStudentsTestMarks;
-import org.fenixedu.academic.dto.onlineTests.InfoSiteStudentsTestMarksStatistics;
-import org.fenixedu.academic.dto.onlineTests.InfoStudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.*;
 import org.fenixedu.academic.predicate.AccessControl;
 import org.fenixedu.academic.service.services.exceptions.FenixServiceException;
 import org.fenixedu.academic.service.services.student.onlineTests.ReadStudentTestQuestionImage;
-import org.fenixedu.academic.service.services.teacher.onlineTests.AddStudentsToDistributedTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ChangeStudentTestQuestion;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ChangeStudentTestQuestionMark;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ChangeStudentTestQuestionValue;
-import org.fenixedu.academic.service.services.teacher.onlineTests.DeleteDistributedTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.DeleteTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.DeleteTestQuestion;
-import org.fenixedu.academic.service.services.teacher.onlineTests.EditDistributedTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.EditTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.EditTestQuestion;
-import org.fenixedu.academic.service.services.teacher.onlineTests.GenetareStudentTestForSimulation;
-import org.fenixedu.academic.service.services.teacher.onlineTests.InsertDistributedTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.InsertTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.InsertTestAsNewTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.InsertTestQuestion;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ReadDistributedTestMarks;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ReadDistributedTestMarksStatistics;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ReadDistributedTestMarksToString;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ReadInquiryStatistics;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ReadQuestionImage;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ReadStudentDistributedTest;
-import org.fenixedu.academic.service.services.teacher.onlineTests.ReadStudentsByIdArray;
-import org.fenixedu.academic.service.services.teacher.onlineTests.SimulateTest;
+import org.fenixedu.academic.service.services.teacher.onlineTests.*;
 import org.fenixedu.academic.ui.struts.action.exceptions.FenixActionException;
 import org.fenixedu.academic.ui.struts.action.teacher.TeacherApplication.TeacherTeachingApp;
 import org.fenixedu.academic.ui.struts.action.teacher.executionCourse.ExecutionCourseBaseAction;
 import org.fenixedu.academic.util.Bundle;
-import org.fenixedu.academic.util.tests.CardinalityType;
-import org.fenixedu.academic.util.tests.CorrectionAvailability;
-import org.fenixedu.academic.util.tests.CorrectionFormula;
-import org.fenixedu.academic.util.tests.QuestionType;
-import org.fenixedu.academic.util.tests.Response;
-import org.fenixedu.academic.util.tests.ResponseLID;
-import org.fenixedu.academic.util.tests.ResponseNUM;
-import org.fenixedu.academic.util.tests.ResponseSTR;
-import org.fenixedu.academic.util.tests.TestQuestionChangesType;
-import org.fenixedu.academic.util.tests.TestQuestionStudentsChangesType;
-import org.fenixedu.academic.util.tests.TestType;
+import org.fenixedu.academic.util.tests.*;
 import org.fenixedu.academic.utils.ParseQuestionException;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.struts.annotations.Forward;
@@ -123,13 +56,17 @@ import org.fenixedu.bennu.struts.portal.StrutsFunctionality;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixframework.FenixFramework;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Ordering;
-import com.google.common.io.BaseEncoding;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * @author Susana Fernandes
@@ -388,14 +325,11 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
         return editTest(mapping, form, request, response);
     }
 
-    public ActionForward showTests(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws FenixActionException {
-        ExecutionCourse executionCourse = FenixFramework.getDomainObject(getExecutionCourse(request).getExternalId());
+    public ActionForward showTests(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+                                   final HttpServletResponse response) throws FenixActionException {
+        final ExecutionCourse executionCourse = FenixFramework.getDomainObject(getExecutionCourse(request).getExternalId());
         final TestScope testScope = executionCourse.getTestScope();
-        List<Test> testList = new ArrayList<Test>();
-        if (testScope != null) {
-            testList = new ArrayList<>(testScope.getTestsSet());
-        }
+        final List<Test> testList = testScope == null ? Collections.emptyList() : testScope.getSortedTestsSet();
         request.setAttribute("testList", testList);
         return doForward(request, "showTests");
     }
@@ -674,14 +608,13 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
         return actionForward;
     }
 
-    public ActionForward showDistributedTests(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws FenixActionException {
-        ExecutionCourse executionCourse = getExecutionCourse(request);
+    public ActionForward showDistributedTests(final ActionMapping mapping, final ActionForm form,
+                                              final HttpServletRequest request, final HttpServletResponse response)
+            throws FenixActionException {
+        final ExecutionCourse executionCourse = getExecutionCourse(request);
         final TestScope testScope = executionCourse.getTestScope();
-        List<DistributedTest> distributedTestList = new ArrayList<DistributedTest>();
-        if (testScope != null) {
-            distributedTestList = new ArrayList<>(testScope.getDistributedTestsSet());
-        }
+        final List<DistributedTest> distributedTestList = testScope == null ? Collections.emptyList() :
+                testScope.getSortedDistributedTestsSet();
         request.setAttribute("distributedTests", distributedTestList);
         return doForward(request, "showDistributedTests");
     }

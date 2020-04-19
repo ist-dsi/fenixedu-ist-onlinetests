@@ -22,11 +22,12 @@
  */
 package org.fenixedu.academic.domain.onlineTests;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.bennu.core.domain.Bennu;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -39,18 +40,25 @@ public class TestScope extends TestScope_Base {
         setRootDomainObject(Bennu.getInstance());
     }
 
-    public TestScope(ExecutionCourse executionCourse) {
+    public TestScope(final ExecutionCourse executionCourse) {
         this();
         setExecutionCourse(executionCourse);
     }
 
-    public static List<DistributedTest> readDistributedTestsByTestScope(ExecutionCourse executionCourse) {
-        List<DistributedTest> result = new ArrayList<DistributedTest>();
-        TestScope testScope = executionCourse.getTestScope();
-        if (testScope != null) {
-            result.addAll(testScope.getDistributedTestsSet());
-        }
-        return result;
+    public static List<DistributedTest> readDistributedTestsByTestScope(final ExecutionCourse executionCourse) {
+        final TestScope testScope = executionCourse.getTestScope();
+        return testScope == null ? Collections.emptyList() : testScope.getSortedDistributedTestsSet();
     }
 
+    public List<DistributedTest> getSortedDistributedTestsSet() {
+        return getDistributedTestsSet().stream()
+                .sorted(DistributedTest.COMPARATOR_BY_DATE)
+                .collect(Collectors.toList());
+    }
+
+    public List<Test> getSortedTestsSet() {
+        return getTestsSet().stream()
+                .sorted((t1, t2) -> t1.getCreationDateDateTime().compareTo(t2.getCreationDateDateTime()))
+                .collect(Collectors.toList());
+    }
 }

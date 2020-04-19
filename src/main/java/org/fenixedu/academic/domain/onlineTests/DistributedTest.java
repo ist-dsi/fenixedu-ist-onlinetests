@@ -22,18 +22,6 @@
 
 package org.fenixedu.academic.domain.onlineTests;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import org.fenixedu.academic.domain.EvaluationManagementLog;
 import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.student.Registration;
@@ -41,15 +29,21 @@ import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.util.Bundle;
 import org.fenixedu.academic.util.tests.Response;
 import org.fenixedu.academic.util.tests.TestType;
-
 import org.fenixedu.bennu.core.domain.Bennu;
-
 import pt.ist.fenixframework.FenixFramework;
+
+import java.util.*;
 
 /**
  * @author Susana Fernandes
  */
 public class DistributedTest extends DistributedTest_Base {
+
+    public static final Comparator<DistributedTest> COMPARATOR_BY_DATE = (dt1, dt2) -> {
+        final int b = dt1.getBeginDate().compareTo(dt2.getBeginDate());
+        final int h = dt1.getBeginHour().compareTo(dt2.getBeginHour());
+        return b == 0 ? (h == 0 ? dt1.getExternalId().compareTo(dt2.getExternalId()) : h) : b;
+    };
 
     public DistributedTest() {
         super();
