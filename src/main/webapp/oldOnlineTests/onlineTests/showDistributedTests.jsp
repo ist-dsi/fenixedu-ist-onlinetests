@@ -90,6 +90,7 @@ function invertSelect(){
 				<tr>
 					<td></td>
 					<th><bean:message key="label.test.title" /></th>
+					<th><bean:message key="message.testType" /></th>
 					<th><bean:message key="message.testBeginDate" /></th>
 					<th><bean:message key="message.testEndDate" /></th>
 					<th></th>
@@ -114,6 +115,9 @@ function invertSelect(){
 							page="<%= "/distributedTestEdition.do?method=prepareEditDistributedTest&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;distributedTestCode=" + distributedTestCode %>">
 							<bean:write name="distributedTest" property="title" />
 						</html:link></td>
+						<td>
+							<%= distributedTest.getTestType().getSimpleTypeString() %>
+						</td>
 						<td><bean:write name="distributedTest" property="beginDateTimeFormatted" /></td>
 						<td><bean:write name="distributedTest" property="endDateTimeFormatted" /></td>
 						<td>

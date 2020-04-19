@@ -37,11 +37,17 @@ public class TestType extends FenixUtil {
 
     public static final int INQUIRY = 3;
 
-    public static final String EVALUATION_STRING = "Ficha de Avaliação (guardar primeira resposta)";
+    public static final String EVALUATION_STRING_SIMPLE = "Ficha de Avaliação";
 
-    public static final String STUDY_STRING = "Ficha de Estudo (guardar última resposta)";
+    public static final String STUDY_STRING_SIMPLE = "Ficha de Estudo";
 
-    public static final String INQUIRY_STRING = "Inquérito";
+    public static final String INQUIRY_STRING_SIMPLE = "Inquérito";
+
+    public static final String EVALUATION_STRING = EVALUATION_STRING_SIMPLE + " (guardar primeira resposta)";
+
+    public static final String STUDY_STRING = STUDY_STRING_SIMPLE + " (guardar última resposta)";
+
+    public static final String INQUIRY_STRING = INQUIRY_STRING_SIMPLE;
 
     private final Integer type;
 
@@ -87,6 +93,18 @@ public class TestType extends FenixUtil {
             return new String(STUDY_STRING);
         } else if (type.intValue() == INQUIRY) {
             return new String(INQUIRY_STRING);
+        }
+
+        return null;
+    }
+
+    public String getSimpleTypeString() {
+        if (type.intValue() == EVALUATION) {
+            return new String(EVALUATION_STRING_SIMPLE);
+        } else if (type.intValue() == STUDY) {
+            return new String(STUDY_STRING_SIMPLE);
+        } else if (type.intValue() == INQUIRY) {
+            return new String(INQUIRY_STRING_SIMPLE);
         }
 
         return null;
