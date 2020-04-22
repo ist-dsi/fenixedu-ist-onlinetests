@@ -1,4 +1,9 @@
 {
+  "resources": {
+    "bundles": [
+      "OnlineTestsResources"
+    ]
+  },
   "modules": [
     { "name": "oldOnlineTests", "configFile": "struts-oldonlinetests.xml" }
   ]

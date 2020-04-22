@@ -31,6 +31,7 @@ import java.util.Random;
 import org.apache.commons.beanutils.BeanComparator;
 import org.fenixedu.academic.domain.EvaluationManagementLog;
 import org.fenixedu.academic.domain.ExecutionCourse;
+import org.fenixedu.academic.domain.GradeScale;
 import org.fenixedu.academic.domain.onlineTests.DistributedTest;
 import org.fenixedu.academic.domain.onlineTests.Metadata;
 import org.fenixedu.academic.domain.onlineTests.OnlineTest;
@@ -47,6 +48,7 @@ import org.fenixedu.academic.service.services.exceptions.FenixServiceException;
 import org.fenixedu.academic.service.services.exceptions.InvalidArgumentsServiceException;
 import org.fenixedu.academic.service.services.exceptions.NotAuthorizedException;
 import org.fenixedu.academic.util.Bundle;
+import org.fenixedu.academic.util.EvaluationType;
 import org.fenixedu.academic.util.tests.CorrectionAvailability;
 import org.fenixedu.academic.util.tests.TestType;
 import org.fenixedu.academic.utils.ParseQuestionException;
@@ -72,6 +74,13 @@ public class InsertDistributedTest {
             throw new InvalidArgumentsServiceException();
         }
 
+        if (testType.getType().equals(TestType.EVALUATION)) {
+            Double maxiumEvaluationMark = test.getTestQuestionsSet().stream().map(tq ->tq.getTestQuestionValue()).reduce(0.0, Double::sum);
+            if(!GradeScale.TYPE20.isValid(maxiumEvaluationMark.toString(), EvaluationType.ONLINE_TEST_TYPE)){
+                throw new FenixServiceException("error.testDistribution.invalidMark");
+            }
+        }
+        
         try {
             final DistributedTestCreator distributedTestCreator =
                     new DistributedTestCreator(executionCourse, test, testInformation, evaluationTitle, beginDate, beginHour,

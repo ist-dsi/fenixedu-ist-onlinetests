@@ -62,6 +62,7 @@ function cleanSelect() {
 
 
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.testInformation" property="testInformation"/>
+<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.evaluationTitle" property="evaluationTitle"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.beginDayFormatted" property="beginDayFormatted"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.beginMonthFormatted" property="beginMonthFormatted"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.beginYearFormatted" property="beginYearFormatted"/>

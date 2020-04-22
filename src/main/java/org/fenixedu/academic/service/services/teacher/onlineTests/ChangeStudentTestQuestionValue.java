@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.ExecutionCourse;
+import org.fenixedu.academic.domain.GradeScale;
 import org.fenixedu.academic.domain.Mark;
 import org.fenixedu.academic.domain.onlineTests.DistributedTest;
 import org.fenixedu.academic.domain.onlineTests.OnlineTest;
@@ -42,6 +43,7 @@ import org.fenixedu.academic.service.strategy.tests.IQuestionCorrectionStrategyF
 import org.fenixedu.academic.service.strategy.tests.QuestionCorrectionStrategyFactory;
 import org.fenixedu.academic.service.strategy.tests.strategys.IQuestionCorrectionStrategy;
 import org.fenixedu.academic.util.Bundle;
+import org.fenixedu.academic.util.EvaluationType;
 import org.fenixedu.academic.util.tests.TestQuestionStudentsChangesType;
 import org.fenixedu.academic.util.tests.TestType;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
@@ -64,10 +66,8 @@ public class ChangeStudentTestQuestionValue {
             studentsTestQuestionList.addAll(StudentTestQuestion.findStudentTestQuestions(question, distributedTest));
         } else if (studentsType.getType().intValue() == TestQuestionStudentsChangesType.STUDENTS_FROM_TEST) {
             final Registration registration = FenixFramework.getDomainObject(studentId);
-            final StudentTestQuestion studentTestQuestion =
-                    StudentTestQuestion.findStudentTestQuestion(question, registration, distributedTest);
-            studentsTestQuestionList.addAll(distributedTest.findStudentTestQuestionsByTestQuestionOrder(studentTestQuestion
-                    .getTestQuestionOrder()));
+            final StudentTestQuestion studentTestQuestion = StudentTestQuestion.findStudentTestQuestion(question, registration, distributedTest);
+            studentsTestQuestionList.addAll(distributedTest.findStudentTestQuestionsByTestQuestionOrder(studentTestQuestion.getTestQuestionOrder()));
         } else if (studentsType.getType().intValue() == TestQuestionStudentsChangesType.ALL_STUDENTS) {
             studentsTestQuestionList.addAll(question.getStudentTestsQuestionsSet());
         }
@@ -91,7 +91,17 @@ public class ChangeStudentTestQuestionValue {
                 }
             }
             studentTestQuestion.setTestQuestionValue(newValue);
+           
+            if (studentTestQuestion.getDistributedTest().getTestType().getType().equals(TestType.EVALUATION)) {
+                Double maxiumEvaluationMark =
+                        StudentTestQuestion.findStudentTestQuestions(studentTestQuestion.getStudent(), distributedTest).stream()
+                                .map(stq -> stq.getTestQuestionValue()).reduce(0.0, Double::sum);
+                if (!GradeScale.TYPE20.isValid(maxiumEvaluationMark.toString(), EvaluationType.ONLINE_TEST_TYPE)) {
+                    throw new FenixServiceException("error.testDistribution.invalidMark");
+                }
+            }
 
+            
             String event = BundleUtil.getString(Bundle.APPLICATION, "message.changeStudentValueLogMessage", newValue.toString());
             new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event);
         }
@@ -120,16 +130,14 @@ public class ChangeStudentTestQuestionValue {
                 } catch (Exception e) {
                     throw new FenixServiceException(e);
                 }
-                IQuestionCorrectionStrategyFactory questionCorrectionStrategyFactory =
-                        QuestionCorrectionStrategyFactory.getInstance();
+                IQuestionCorrectionStrategyFactory questionCorrectionStrategyFactory = QuestionCorrectionStrategyFactory.getInstance();
                 IQuestionCorrectionStrategy questionCorrectionStrategy =
                         questionCorrectionStrategyFactory.getQuestionCorrectionStrategy(studentTestQuestion);
                 studentTestQuestion = questionCorrectionStrategy.getMark(studentTestQuestion);
                 return studentTestQuestion.getTestQuestionMark();
             } else if (!studentTestQuestion.getTestQuestionMark().equals(Double.parseDouble("0"))) {
                 newMark =
-                        (newValue * studentTestQuestion.getTestQuestionMark())
-                                * (java.lang.Math.pow(studentTestQuestion.getTestQuestionValue(), -1));
+                        (newValue * studentTestQuestion.getTestQuestionMark()) * (java.lang.Math.pow(studentTestQuestion.getTestQuestionValue(), -1));
             }
 
         }
@@ -141,9 +149,8 @@ public class ChangeStudentTestQuestionValue {
     private static final ChangeStudentTestQuestionValue serviceInstance = new ChangeStudentTestQuestionValue();
 
     @Atomic
-    public static void runChangeStudentTestQuestionValue(String executionCourseId, String distributedTestId, Double newValue,
-            String questionId, String studentId, TestQuestionStudentsChangesType studentsType) throws FenixServiceException,
-            NotAuthorizedException {
+    public static void runChangeStudentTestQuestionValue(String executionCourseId, String distributedTestId, Double newValue, String questionId,
+            String studentId, TestQuestionStudentsChangesType studentsType) throws FenixServiceException, NotAuthorizedException {
         ExecutionCourseLecturingTeacherAuthorizationFilter.instance.execute(executionCourseId);
         serviceInstance.run(executionCourseId, distributedTestId, newValue, questionId, studentId, studentsType);
     }

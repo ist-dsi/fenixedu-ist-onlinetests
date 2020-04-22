@@ -25,6 +25,7 @@ import java.util.Set;
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.EvaluationManagementLog;
 import org.fenixedu.academic.domain.ExecutionCourse;
+import org.fenixedu.academic.domain.GradeScale;
 import org.fenixedu.academic.domain.Mark;
 import org.fenixedu.academic.domain.onlineTests.DistributedTest;
 import org.fenixedu.academic.domain.onlineTests.OnlineTest;
@@ -37,6 +38,7 @@ import org.fenixedu.academic.service.services.exceptions.FenixServiceException;
 import org.fenixedu.academic.service.services.exceptions.InvalidArgumentsServiceException;
 import org.fenixedu.academic.service.services.exceptions.NotAuthorizedException;
 import org.fenixedu.academic.util.Bundle;
+import org.fenixedu.academic.util.EvaluationType;
 import org.fenixedu.academic.util.tests.CorrectionAvailability;
 import org.fenixedu.academic.util.tests.TestType;
 
@@ -106,10 +108,17 @@ public class EditDistributedTest {
             for (Registration registration : registrations) {
                 Set<StudentTestQuestion> studentTestQuestionList =
                         StudentTestQuestion.findStudentTestQuestions(registration, distributedTest);
+                
+                Double maxiumEvaluationMark = studentTestQuestionList.stream().map(stq -> stq.getTestQuestionValue()).reduce(0.0, Double::sum);
+                if (!GradeScale.TYPE20.isValid(maxiumEvaluationMark.toString(), EvaluationType.ONLINE_TEST_TYPE)) {
+                    throw new FenixServiceException("error.testDistribution.invalidMark");
+                }
+
                 double studentMark = 0;
                 for (StudentTestQuestion studentTestQuestion : studentTestQuestionList) {
                     studentMark += studentTestQuestion.getTestQuestionMark().doubleValue();
                 }
+                
                 Attends attend = registration.readAttendByExecutionCourse(executionCourse);
                 if (attend != null) {
                     Mark mark = new Mark();
