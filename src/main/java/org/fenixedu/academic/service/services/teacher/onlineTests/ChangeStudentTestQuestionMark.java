@@ -26,7 +26,9 @@ import java.util.Set;
 
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.ExecutionCourse;
+import org.fenixedu.academic.domain.GradeScale;
 import org.fenixedu.academic.domain.Mark;
+import org.fenixedu.academic.domain.exceptions.InvalidMarkDomainException;
 import org.fenixedu.academic.domain.onlineTests.DistributedTest;
 import org.fenixedu.academic.domain.onlineTests.OnlineTest;
 import org.fenixedu.academic.domain.onlineTests.Question;
@@ -39,6 +41,7 @@ import org.fenixedu.academic.service.filter.ExecutionCourseLecturingTeacherAutho
 import org.fenixedu.academic.service.services.exceptions.FenixServiceException;
 import org.fenixedu.academic.service.services.exceptions.NotAuthorizedException;
 import org.fenixedu.academic.util.Bundle;
+import org.fenixedu.academic.util.EvaluationType;
 import org.fenixedu.academic.util.tests.QuestionType;
 import org.fenixedu.academic.util.tests.Response;
 import org.fenixedu.academic.util.tests.ResponseLID;
@@ -82,6 +85,11 @@ public class ChangeStudentTestQuestionMark {
             }
 
             if (studentTestQuestion.getDistributedTest().getTestType().equals(new TestType(TestType.EVALUATION))) {
+                if (studentTestQuestion.getTestQuestionValue().compareTo(newMark) < 0) {
+                    throw new FenixServiceException("error.testDistribution.mark.higher.quetionValue");
+                }
+
+                
                 if (studentTestQuestion.getResponse() == null) {
                     Response response = null;
                     try {
@@ -104,20 +112,23 @@ public class ChangeStudentTestQuestionMark {
                 OnlineTest onlineTest = studentTestQuestion.getDistributedTest().getOnlineTest();
                 ExecutionCourse executionCourse = FenixFramework.getDomainObject(executionCourseId);
                 Attends attend = studentTestQuestion.getStudent().readAttendByExecutionCourse(executionCourse);
-                Mark mark = onlineTest.getMarkByAttend(attend);
-                final String markValue =
-                        getNewStudentMark(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent());
-                if (mark == null) {
-                    mark = new Mark(attend, onlineTest, markValue);
-                } else {
-                    mark.setMark(markValue);
+                try {
+                    Mark mark = onlineTest.getMarkByAttend(attend);
+                    final String markValue = getNewStudentMark(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent());
+                    if (mark == null) {
+                        mark = new Mark(attend, onlineTest, markValue);
+                    } else {
+                        mark.setMark(markValue);
+                    }
+                    if (mark.getPublishedMark() != null) {
+                        mark.setPublishedMark(markValue);
+                    }
+                } catch (InvalidMarkDomainException e) {
+                    throw new FenixServiceException("error.testDistribution.invalidMark");
                 }
-                if (mark.getPublishedMark() != null) {
-                    mark.setPublishedMark(markValue);
-                }
+                
             }
             String event = BundleUtil.getString(Bundle.APPLICATION, "message.changeStudentMarkLogMessage", newMark.toString());
-
             new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event);
         }
     }

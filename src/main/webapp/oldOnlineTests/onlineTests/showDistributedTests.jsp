@@ -52,7 +52,7 @@ function invertSelect(){
 </script>
 <logic:present name="distributedTests">
 	<bean:define id="executionCourseID" value="<%=(pageContext.findAttribute("executionCourseID")).toString()%>" />
-
+	<span class="error"><!-- Error messages go here --><html:errors property="InvalidDistribution" bundle="ONLINE_TESTS_RESOURCES"/></span>
 	<logic:present name="successfulDistribution">
 		<logic:equal name="successfulDistribution" value="true">
 			<span class="error"><!-- Error messages go here --><bean:message key="message.successfulDistribution" /></span>

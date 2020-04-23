@@ -46,7 +46,7 @@
 				<bean:message key="link.createTest" />
 			</html:link></div>
 		<br />
-		<span class="error"><!-- Error messages go here --><html:errors property="InvalidDistribution" /></span>
+		<span class="error"><!-- Error messages go here --><html:errors property="InvalidDistribution" bundle="ONLINE_TESTS_RESOURCES"/></span>
 		<table class="table">
 			<tr>
 				<th><bean:message key="label.test.title" /></th>

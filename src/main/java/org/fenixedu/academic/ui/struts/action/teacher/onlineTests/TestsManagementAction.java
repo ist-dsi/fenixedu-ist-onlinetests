@@ -591,7 +591,8 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
                     beginDate, beginHour, endDate, endHour, testTypeArg, correctionAvailabilityArg, imsFeedbackArg,
                     infoStudentList);
         } catch (FenixServiceException e) {
-            throw new FenixActionException(e);
+            error(request, "InvalidDistribution", e.getMessage());
+            return showTests(mapping, form, request, response);
         }
 
         request.setAttribute("successfulDistribution", new Boolean(true));
@@ -767,6 +768,7 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
                     correctionAvailabilityArg, imsFeedbackArg);
         } catch (FenixServiceException e) {
             request.setAttribute("successfulEdition", new Boolean(false));
+            error(request, "InvalidDistribution", e.getMessage());
             return showDistributedTests(mapping, form, request, response);
         }
 
@@ -1118,15 +1120,15 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
         final String questionValueString = (String) ((DynaActionForm) form).get("questionValue");
 
         try {
-            ChangeStudentTestQuestionValue.runChangeStudentTestQuestionValue(getExecutionCourse(request).getExternalId(),
-                    distributedTestCode, new Double(questionValueString), questionCode, studentCode,
-                    new TestQuestionStudentsChangesType(new Integer(studentTypeString)));
+            ChangeStudentTestQuestionValue.runChangeStudentTestQuestionValue(getExecutionCourse(request).getExternalId(), distributedTestCode,
+                    new Double(questionValueString), questionCode, studentCode, new TestQuestionStudentsChangesType(new Integer(studentTypeString)));
         } catch (FenixServiceException e) {
-            throw new FenixActionException(e);
+            error(request, "InvalidDistribution", e.getMessage());
+            return prepareChangeStudentTestQuestionValue(mapping, form, request, response);
         }
         request.setAttribute("distributedTestCode", distributedTestCode);
         request.setAttribute("studentCode", studentCode);
-        return doForward(request, "showStudentTestCorrection");
+        return showStudentTest(mapping, form, request, response);
     }
 
     public ActionForward prepareChangeStudentTestQuestionMark(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -1154,11 +1156,12 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
                     distributedTestCode, new Double(questionValueString.replaceAll(",", ".")), questionCode, studentCode,
                     new TestQuestionStudentsChangesType(new Integer(studentTypeString)));
         } catch (FenixServiceException e) {
-            throw new FenixActionException(e);
+            error(request, "InvalidDistribution", e.getMessage());
+            return prepareChangeStudentTestQuestionMark(mapping, form, request, response);
         }
         request.setAttribute("distributedTestCode", distributedTestCode);
         request.setAttribute("studentCode", studentCode);
-        return doForward(request, "showStudentTestCorrection");
+        return showStudentTest(mapping, form, request, response);
     }
 
     public ActionForward chooseTestSimulationOptions(ActionMapping mapping, ActionForm form, HttpServletRequest request,

@@ -41,6 +41,8 @@
 <td><html:text bundle="HTMLALT_RESOURCES" altKey="text.questionValue" size="1" property="questionValue" /></td>
 </tr>
 </table>
+<span class="error"><!-- Error messages go here --><html:errors property="InvalidDistribution" bundle="ONLINE_TESTS_RESOURCES"/></span>
+
 <table>
 	<tr>
 		<td><b><bean:message key="label.modifyFor"/></b></td>
