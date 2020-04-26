@@ -133,7 +133,7 @@ public class ChangeStudentTestQuestionValue {
                 IQuestionCorrectionStrategyFactory questionCorrectionStrategyFactory = QuestionCorrectionStrategyFactory.getInstance();
                 IQuestionCorrectionStrategy questionCorrectionStrategy =
                         questionCorrectionStrategyFactory.getQuestionCorrectionStrategy(studentTestQuestion);
-                studentTestQuestion = questionCorrectionStrategy.getMark(studentTestQuestion);
+                studentTestQuestion = (StudentTestQuestion) questionCorrectionStrategy.getMark(studentTestQuestion);
                 return studentTestQuestion.getTestQuestionMark();
             } else if (!studentTestQuestion.getTestQuestionMark().equals(Double.parseDouble("0"))) {
                 newMark =

@@ -24,7 +24,7 @@ package org.fenixedu.academic.service.strategy.tests.strategys;
 
 import java.util.List;
 
-import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.academic.util.tests.CardinalityType;
 import org.fenixedu.academic.util.tests.QuestionType;
 import org.fenixedu.academic.util.tests.ResponseProcessing;
@@ -37,7 +37,7 @@ import org.fenixedu.academic.util.tests.ResponseSTR;
 public class IMS_STRQuestionCorrectionStrategy extends QuestionCorrectionStrategy {
 
     @Override
-    public StudentTestQuestion getMark(StudentTestQuestion studentTestQuestion) {
+    public IStudentTestQuestion getMark(IStudentTestQuestion studentTestQuestion) {
         if ((studentTestQuestion.getSubQuestionByItem().getQuestionType().getType().intValue() == QuestionType.STR)
                 || (studentTestQuestion.getSubQuestionByItem().getQuestionType().getType().intValue() == QuestionType.LID && (studentTestQuestion
                         .getSubQuestionByItem().getQuestionType().getCardinalityType().getType().intValue() == CardinalityType.SINGLE))) {
@@ -59,7 +59,7 @@ public class IMS_STRQuestionCorrectionStrategy extends QuestionCorrectionStrateg
         return studentTestQuestion;
     }
 
-    private StudentTestQuestion setStudentTestQuestionResponse(StudentTestQuestion studentTestQuestion,
+    private IStudentTestQuestion setStudentTestQuestionResponse(IStudentTestQuestion studentTestQuestion,
             ResponseProcessing responseProcessing) {
         studentTestQuestion.setTestQuestionMark(responseProcessing.getResponseValue());
         ResponseSTR r = (ResponseSTR) studentTestQuestion.getResponse();

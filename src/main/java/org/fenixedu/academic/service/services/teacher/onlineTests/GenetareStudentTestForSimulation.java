@@ -82,7 +82,7 @@ public class GenetareStudentTestForSimulation {
             questionList.addAll(testQuestionExample.getQuestion().getMetadata().getVisibleQuestions());
 
             InfoStudentTestQuestion infoStudentTestQuestion = new InfoStudentTestQuestion();
-            // infoStudentTestQuestion.setDistributedTest(distributedTest);
+            infoStudentTestQuestion.setDistributedTest(infoDistributedTest);
             infoStudentTestQuestion.setTestQuestionOrder(testQuestionExample.getTestQuestionOrder());
             infoStudentTestQuestion.setTestQuestionValue(testQuestionExample.getTestQuestionValue());
             infoStudentTestQuestion.setOldResponse(Integer.valueOf(0));
@@ -97,14 +97,16 @@ public class GenetareStudentTestForSimulation {
             if (question == null) {
                 throw new InvalidArgumentsServiceException();
             }
-            infoStudentTestQuestion.setQuestion(InfoQuestion.newInfoFromDomain(question));
+            infoStudentTestQuestion.setQuestion(question);
             ParseSubQuestion parse = new ParseSubQuestion();
-            // try {
-            // // studentTestQuestion =
-            // parse.parseStudentTestQuestion(studentTestQuestion, path);
-            // } catch (Exception e) {
-            // throw new FenixServiceException(e);
-            // }
+            try {
+                infoStudentTestQuestion = parse.parseStudentTestQuestion(infoStudentTestQuestion, testType);
+            } catch (Exception e) {
+                throw new FenixServiceException(e);
+             }
+            if (infoStudentTestQuestion.getSubQuestionByItem().getShuffle() != null) {
+                infoStudentTestQuestion.setOptionShuffle(infoStudentTestQuestion.getSubQuestionByItem().getShuffleString());
+            }
             infoStudentTestQuestionList.add(infoStudentTestQuestion);
             questionList.remove(question);
         }
@@ -121,8 +123,6 @@ public class GenetareStudentTestForSimulation {
         }
         return question;
     }
-
-    // Service Invokers migrated from Berserk
 
     private static final GenetareStudentTestForSimulation serviceInstance = new GenetareStudentTestForSimulation();
 

@@ -25,43 +25,12 @@
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <jsp:include page="/includeMathJax.jsp" />
 <logic:present name="studentTestQuestionList">
-	<center><logic:empty name="studentTestQuestionList">
+	
+	<logic:empty name="studentTestQuestionList">
 		<h2><bean:message key="message.test.no.available" /></h2>
-	</logic:empty> <logic:notEmpty name="studentTestQuestionList">
-
-		<logic:present name="successfulChanged">
-			<span class="error"><!-- Error messages go here --><bean:message key="message.successfulChanged" /></span>
-			<br />
-			<table>
-				<logic:iterate id="changed" name="successfulChanged">
-					<logic:iterate id="student" name="changed" property="infoStudentList">
-						<tr>
-							<tr>
-								<td><strong><bean:write name="changed" property="infoDistributedTest.title" /></strong></td>
-								<td><bean:write name="student" property="number" /></td>
-							</tr>
-					</logic:iterate>
-				</logic:iterate>
-			</table>
-		</logic:present>
-		<logic:present name="insuccessfulAdvisoryDistribution">
-			<span class="error"><!-- Error messages go here --><bean:message key="message.insuccessfulAdvisoryDistributionForAll" /></span>
-		</logic:present>
-		<logic:present name="studentWithoutAdvisory">
-			<bean:size id="infoStudentListSize" name="studentWithoutAdvisory" />
-			<logic:notEqual name="infoStudentListSize" value="0">
-				<table>
-					<tr>
-						<td><span class="error"><!-- Error messages go here --><bean:message key="message.insuccessfulAdvisoryDistribution" /></span></td>
-					</tr>
-					<logic:iterate id="student" name="studentWithoutAdvisory">
-						<tr>
-							<td><span class="error"><!-- Error messages go here --><bean:write name="student" property="number" /></span></td>
-						</tr>
-					</logic:iterate>
-				</table>
-			</logic:notEqual>
-		</logic:present>
+	</logic:empty> 
+	
+	<logic:notEmpty name="studentTestQuestionList">
 
 		<html:form action="/studentTestManagement">
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="showTestMarks" />
@@ -75,29 +44,36 @@
 			<bean:define id="objectCode" name="distributedTest" property="testScope.executionCourse.externalId" />
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.objectCode" property="objectCode" value="<%= objectCode.toString() %>" />
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.distributedTestCode" property="distributedTestCode" value="<%= testCode.toString() %>" />
-
-			<h2><bean:write name="distributedTest" property="title" /></h2>
-			<b><bean:write name="distributedTest" property="testInformation" /></b></center>
-	<br />
-	<br />
-	<bean:define id="testType" name="distributedTest" property="testType.type" />
-	<%if(((Integer)testType).intValue()!=3){%>
-	<b><bean:message key="label.test.totalClassification"/>:</b>&nbsp;<bean:write name="classification"/>
-	<%}%>
-	<jsp:include page="showStudentTest.jsp">
-		<jsp:param name="pageType" value="correction"/>
-		<jsp:param name="correctionType" value="studentCorrection"/>
-		<jsp:param name="testCode" value="<%=testCode%>"/>
- 	</jsp:include>
-
-	<br/>
-	<br/>
-	<table align="center">
-	<tr>
-		<td><html:submit bundle="HTMLALT_RESOURCES" altKey="submit.submit" styleClass="inputbutton"><bean:message key="label.back"/></html:submit></td>
-	</tr>
-	</table>
-	</html:form>
+			<center>
+				<h2><bean:write name="distributedTest" property="title" /></h2>
+				<b><bean:write name="distributedTest" property="testInformation" /></b>
+			</center>
+			<br />
+			<br />
+			<bean:define id="testType" name="distributedTest" property="testType.type" />
+			<%if(((Integer)testType).intValue()!=3){%>
+			<b><bean:message key="label.test.totalClassification"/>:</b>&nbsp;<bean:write name="classification"/>
+			<%}%>
+			
+			<bean:define id="testType" name="distributedTest" property="testType.type"/>
+			<bean:define id="correctionAvailability" name="distributedTest" property="correctionAvailability.availability"/>
+			<bean:define id="imsFeedback" name="distributedTest" property="imsFeedback"/>
+			<jsp:include page="showStudentTest.jsp">
+				<jsp:param name="pageType" value="correction"/>
+				<jsp:param name="correctionType" value="studentCorrection"/>
+				<jsp:param name="testCode" value="<%=testCode%>"/>
+				<jsp:param name="testType" value="<%=testType%>"/>
+				<jsp:param name="correctionAvailability" value="<%=correctionAvailability%>"/>
+				<jsp:param name="imsFeedback" value="<%=imsFeedback%>"/>
+		 	</jsp:include>
+			<br/>
+			<br/>
+			<table align="center">
+				<tr>
+					<td><html:submit bundle="HTMLALT_RESOURCES" altKey="submit.submit" styleClass="inputbutton"><bean:message key="label.back"/></html:submit></td>
+				</tr>
+			</table>
+		</html:form>
 	</logic:notEmpty>
 </logic:present>
 <logic:notPresent name="studentTestQuestionList">

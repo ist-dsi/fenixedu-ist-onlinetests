@@ -30,6 +30,9 @@
 <bean:define id="testCode" value="${pageContext.request.getParameter('distributedTestCode')}"/>
 <bean:define id="pageType" value="${pageContext.request.getParameter('pageType')}"/>
 <bean:define id="correctionType" value="${pageContext.request.getParameter('correctionType')}"/>
+<bean:define id="testType" value="${pageContext.request.getParameter('testType')}"/>
+<bean:define id="correctionAvailability" value="${pageContext.request.getParameter('correctionAvailability')}"/>
+<bean:define id="imsFeedback" value="${pageContext.request.getParameter('imsFeedback')}"/>
 
 <span class="error"><!-- Error messages go here --><html:errors /></span>
 <br/>
@@ -37,19 +40,16 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="10">
 	<bean:define id="studentId" value="0" type="java.lang.Object"/>
 	<bean:define id="order" value="1"/>
-	<logic:iterate id="testQuestion" name="studentTestQuestionList" type="org.fenixedu.academic.domain.onlineTests.StudentTestQuestion" indexId="questionIndex">
+	<logic:iterate id="testQuestion" name="studentTestQuestionList" type="org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion" indexId="questionIndex">
 	<logic:equal name="correctionType" value="studentCorrection">
 			<bean:define id="student" name="testQuestion" property="student" type="org.fenixedu.academic.domain.student.Registration"/>
 			<bean:define id="person" name="student" property="person" type="org.fenixedu.academic.domain.Person"/>
 			<bean:define id="studentId" name="student" property="externalId"/>
 	</logic:equal>
 	<bean:define id="question" name="testQuestion" property="question" type="org.fenixedu.academic.domain.onlineTests.Question"/>
-	<bean:define id="distributedTest" name="testQuestion" property="distributedTest" type="org.fenixedu.academic.domain.onlineTests.DistributedTest"/>
 	<bean:define id="questionCode" name="question" property="externalId"/>
 	<bean:define id="questionOrder" name="testQuestion" property="testQuestionOrder"/>
-	<bean:define id="correction" name="testQuestion" property="distributedTest.correctionAvailability" type="org.fenixedu.academic.util.tests.CorrectionAvailability"/>
 	<bean:define id="formula" name="testQuestion" property="correctionFormula.formula"/>
-	<bean:define id="testType" name="testQuestion" property="distributedTest.testType.type"/>
 	
 	<logic:iterate id="subQuestion" name="testQuestion" property="studentSubQuestions" type="org.fenixedu.academic.domain.onlineTests.SubQuestion" indexId="itemIndex">
 		<bean:define id="item" value="<%=itemIndex.toString()%>"/>
@@ -59,38 +59,32 @@
 		<logic:notEqual name="correctionType" value="studentCorrection">
 			<html:hidden alt='<%="questionCode"+questionIndex%>' property='<%="questionCode"+questionIndex%>' value="<%= questionCode.toString() %>"/>
 			<html:hidden alt='<%="questionType"+questionIndex%>' property='<%="questionType"+questionIndex%>' value="<%= questionType.toString() %>"/>
-			<%if(((Integer)questionType).intValue()==1 ){ %>
-				<bean:define id="optionShuffle" name="testQuestion" property="optionShuffle"/>
-				<html:hidden alt='<%="optionShuffle"+questionIndex%>' property='<%="optionShuffle"+questionIndex%>' value="<%= optionShuffle.toString() %>"/>
-			<% } %>
 		</logic:notEqual>
 		
 		<bean:define id="mark" name="testQuestion" property="testQuestionMark"/>
 		<bean:define id="testQuestionValue" name="testQuestion" property="testQuestionValue"/>
 		<bean:define id="mark" name="testQuestion" property="testQuestionMark"/>
-		<logic:equal name="correctionType" value="studentCorrection">
 		<%if(testQuestion.getStudentSubQuestions().size()<=1 || itemIndex.equals(new Integer(0))){%>
 				<tr><td><hr/></td></tr>
-		<%}%>		
-		<tr><td><div class="gen-button">
-			<html:link page="<%= "/testsManagement.do?method=prepareChangeStudentTestQuestion&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;questionCode=" + pageContext.findAttribute("questionCode") +"&amp;distributedTestCode=" + pageContext.findAttribute("testCode") +"&amp;studentCode=" + pageContext.findAttribute("studentId")%>">
-				<bean:message key="label.changeQuestion" />
-			</html:link>
-		</div><div class="gen-button">
-			<html:link page="<%= "/testsManagement.do?method=prepareChangeStudentTestQuestionValue&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;questionCode=" + pageContext.findAttribute("questionCode") +"&amp;distributedTestCode=" + pageContext.findAttribute("testCode") +"&amp;studentCode=" + pageContext.findAttribute("studentId")+"&amp;questionValue="+testQuestionValue%>">
-				<bean:message key="label.changeQuestionValue" />
-			</html:link>
-		</div><div class="gen-button">
-			<html:link page="<%= "/testsManagement.do?method=prepareChangeStudentTestQuestionMark&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;questionCode=" + pageContext.findAttribute("questionCode") +"&amp;distributedTestCode=" + pageContext.findAttribute("testCode") +"&amp;studentCode=" + pageContext.findAttribute("studentId")+"&amp;questionValue="+mark%>">
-				<bean:message key="label.changeQuestionMark" />
-			</html:link>
-		</div></td></tr>
+		<%}%>
+			<logic:equal name="correctionType" value="studentCorrection">
+			<tr><td><div class="gen-button">
+				<html:link page="<%= "/testsManagement.do?method=prepareChangeStudentTestQuestion&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;questionCode=" + pageContext.findAttribute("questionCode") +"&amp;distributedTestCode=" + pageContext.findAttribute("testCode") +"&amp;studentCode=" + pageContext.findAttribute("studentId")%>">
+					<bean:message key="label.changeQuestion" />
+				</html:link>
+			</div><div class="gen-button">
+				<html:link page="<%= "/testsManagement.do?method=prepareChangeStudentTestQuestionValue&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;questionCode=" + pageContext.findAttribute("questionCode") +"&amp;distributedTestCode=" + pageContext.findAttribute("testCode") +"&amp;studentCode=" + pageContext.findAttribute("studentId")+"&amp;questionValue="+testQuestionValue%>">
+					<bean:message key="label.changeQuestionValue" />
+				</html:link>
+			</div><div class="gen-button">
+				<html:link page="<%= "/testsManagement.do?method=prepareChangeStudentTestQuestionMark&amp;executionCourseID=" + pageContext.findAttribute("executionCourseID") + "&amp;questionCode=" + pageContext.findAttribute("questionCode") +"&amp;distributedTestCode=" + pageContext.findAttribute("testCode") +"&amp;studentCode=" + pageContext.findAttribute("studentId")+"&amp;questionValue="+mark%>">
+					<bean:message key="label.changeQuestionMark" />
+				</html:link>
+			</div></td></tr>
 		</logic:equal>
 		<%if(testQuestion.getStudentSubQuestions().size()<=1 || itemIndex.equals(new Integer(0))){%>
 				<tr><td><b><bean:message key="message.tests.question" />:</b>&nbsp;<bean:write name="order"/>
-				(
-				<bean:write name="testQuestion" property="question.xmlFileName"/>
-				)
+				<logic:equal name="correctionType" value="studentCorrection">(<bean:write name="testQuestion" property="question.xmlFileName"/>)</logic:equal>
 				</td></tr>
 				<bean:define id="order" value="<%= (new Integer(Integer.parseInt(order)+1)).toString() %>"/>
 			<%}
@@ -100,7 +94,7 @@
 			 	<%}%>
 			<%}%>
 		
-		<%if(((Integer)testType).intValue()!=3){%>
+		<%if(Integer.valueOf(testType).intValue() != org.fenixedu.academic.util.tests.TestType.INQUIRY){%>
 		<bean:define id="testQuestionValue" value="<%= (new java.text.DecimalFormat("#0.##").format(Double.parseDouble(testQuestionValue.toString())).toString()) %>"/>
 			<tr><td><b><bean:message key="message.tests.questionValue" /></b>&nbsp;<bean:write name="testQuestionValue"/></td></tr>
 			<logic:equal name="pageType" value="correction">		
@@ -216,7 +210,7 @@
 				<logic:equal name="pageType" value="doTest">
 					<logic:notEmpty name="testQuestion" property="response">
 						<logic:notEmpty name="testQuestion" property="response.response">
-							<%if(((Integer)testType).intValue()!=1){%>
+							<%if(Integer.valueOf(testType).intValue() != org.fenixedu.academic.util.tests.TestType.EVALUATION){%>
 								<bean:define id="checkDisable" value="false"/>
 							<%}%>
 						</logic:notEmpty>
@@ -235,8 +229,8 @@
 					<bean:define id="indexOption" value="<%= (new Integer(Integer.parseInt(indexOption)+1)).toString() %>"/>
 					<bean:define id="button" value="true"/>
 					<logic:notEqual name="pageType" value="doTest">
-						<logic:notEqual name="correction" property="availability" value="1">
-							<%if(((Integer)testType).intValue()!=3){%> <%-- Not TestType.INQUIRY  and CorrectionFormula.FENIX--%>
+						<logic:notEqual name="correctionAvailability" value="1">
+							<%if(Integer.valueOf(testType).intValue() != org.fenixedu.academic.util.tests.TestType.INQUIRY){%> <%-- Not TestType.INQUIRY  and CorrectionFormula.FENIX--%>
 							<bean:define id="isResponsed" value="false"/>
 							<logic:notEmpty name="testQuestion" property="response">
 							<logic:notEmpty name="testQuestion" property="response.response">
@@ -421,10 +415,10 @@
 			</td></tr></table>
 			<bean:define id="imageLabel" value="false"/>
 		</logic:equal>
-		<%if((((Integer)testType).intValue()!=3) &&(((Integer)formula).intValue()==1)){%> <%-- Not TestType.INQUIRY  and CorrectionFormula.FENIX--%>
+		<%if((Integer.valueOf(testType).intValue() != org.fenixedu.academic.util.tests.TestType.INQUIRY) &&(((Integer)formula).intValue()==1)){%> <%-- Not TestType.INQUIRY  and CorrectionFormula.FENIX--%>
 			<%if(((Integer)questionType).intValue()==1 ){ %> <%--QuestionType.LID--%>
 				<logic:notEqual name="pageType" value="doTest">
-					<logic:notEqual name="correction" property="availability" value="1">
+					<logic:notEqual name="correctionAvailability" value="1">
 					<logic:notEmpty name="testQuestion" property="response">
 						<logic:notEmpty name="testQuestion" property="response.response">
 							<logic:notEqual name="indexOption" value="1">
@@ -450,7 +444,7 @@
 				</td></tr></table>
 			<%}else{%> <%--QuestionType.STR or QuestionType.NUM --%>
 				<logic:notEqual name="pageType" value="doTest">
-					<logic:notEqual name="correction" property="availability" value="1">
+					<logic:notEqual name="correctionAvailability" value="1">
 					<logic:notEmpty name="testQuestion" property="response">
 						<logic:notEmpty name="testQuestion" property="response.response">
 							<logic:notEmpty name="testQuestion" property="response.isCorrect">
@@ -467,15 +461,15 @@
 				</logic:notEqual>
 				</td></tr><tr><td>
 			<%}%>
-		<%} else if((((Integer)testType).intValue()!=3) &&(((Integer)formula).intValue()!=1)){%> <%-- Not TestType.INQUIRY  and CorrectionFormula.IMS--%>
+		<%} else if((Integer.valueOf(testType).intValue() != org.fenixedu.academic.util.tests.TestType.INQUIRY) &&(((Integer)formula).intValue()!=1)){%> <%-- Not TestType.INQUIRY  and CorrectionFormula.IMS--%>
 			</td></tr>
 			<%if(((Integer)questionType).intValue()==1 ){ %> <%--QuestionType.LID--%>
 				</table>
 			<%}%>
 			<tr/><tr><td>
 			<logic:notEqual name="pageType" value="doTest">
-				<logic:notEqual name="correction" property="availability" value="1">
-					<logic:equal name="distributedTest" property="imsFeedback" value="true">
+				<logic:notEqual name="correctionAvailability" value="1">
+					<logic:equal name="imsFeedback" value="true">
 						<bean:define id="imageLabel" value="false"/>
 						
 						<bean:define id="responseProcessingIndex" value="" type="java.lang.Object"/>
@@ -533,7 +527,7 @@
 					</logic:equal>
 				</logic:notEqual>
 			</logic:notEqual>
-		<%} else if(((Integer)testType).intValue()==3) {%> <%-- TestType.INQUIRY--%>
+		<%} else if(Integer.valueOf(testType).intValue() == org.fenixedu.academic.util.tests.TestType.INQUIRY) {%> <%-- TestType.INQUIRY--%>
 			</td></tr>
 			<%if(((Integer)questionType).intValue()==1 ){ %> <%--QuestionType.LID--%>
 				</table>

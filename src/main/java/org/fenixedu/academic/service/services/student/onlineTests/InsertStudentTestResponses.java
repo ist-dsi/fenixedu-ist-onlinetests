@@ -136,7 +136,7 @@ public class InsertStudentTestResponses {
                             if ((!distributedTest.getTestType().equals(new TestType(TestType.INQUIRY)))
                                     && studentTestQuestion.getSubQuestionByItem().getResponseProcessingInstructions().size() != 0) {
 
-                                studentTestQuestion = questionCorrectionStrategy.getMark(studentTestQuestion);
+                                studentTestQuestion = (StudentTestQuestion) questionCorrectionStrategy.getMark(studentTestQuestion);
 
                                 if (studentTestQuestion.getSubQuestionByItem().getNextItemId() != null) {
                                     Integer newOrder = studentTestQuestion.getTestQuestionOrder() + 1;

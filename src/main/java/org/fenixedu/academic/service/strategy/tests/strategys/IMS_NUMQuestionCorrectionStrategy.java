@@ -24,7 +24,7 @@ package org.fenixedu.academic.service.strategy.tests.strategys;
 
 import java.util.List;
 
-import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.academic.util.tests.QuestionType;
 import org.fenixedu.academic.util.tests.ResponseNUM;
 import org.fenixedu.academic.util.tests.ResponseProcessing;
@@ -36,7 +36,7 @@ import org.fenixedu.academic.util.tests.ResponseProcessing;
 public class IMS_NUMQuestionCorrectionStrategy extends QuestionCorrectionStrategy {
 
     @Override
-    public StudentTestQuestion getMark(StudentTestQuestion studentTestQuestion) {
+    public IStudentTestQuestion getMark(IStudentTestQuestion studentTestQuestion) {
         if (studentTestQuestion.getSubQuestionByItem().getQuestionType().getType().intValue() == QuestionType.NUM) {
             List<ResponseProcessing> questionCorrectionList =
                     studentTestQuestion.getSubQuestionByItem().getResponseProcessingInstructions();
@@ -58,7 +58,7 @@ public class IMS_NUMQuestionCorrectionStrategy extends QuestionCorrectionStrateg
         return studentTestQuestion;
     }
 
-    private StudentTestQuestion setStudentTestQuestionResponse(StudentTestQuestion studentTestQuestion,
+    private IStudentTestQuestion setStudentTestQuestionResponse(IStudentTestQuestion studentTestQuestion,
             ResponseProcessing responseProcessing) {
         studentTestQuestion.setTestQuestionMark(responseProcessing.getResponseValue());
         ResponseNUM r = (ResponseNUM) studentTestQuestion.getResponse();

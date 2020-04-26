@@ -22,7 +22,7 @@
  */
 package org.fenixedu.academic.service.strategy.tests.strategys;
 
-import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.academic.util.tests.Response;
 
 /**
@@ -31,7 +31,7 @@ import org.fenixedu.academic.util.tests.Response;
  */
 public interface IQuestionCorrectionStrategy {
 
-    public StudentTestQuestion getMark(StudentTestQuestion studentTestQuestion);
+    public IStudentTestQuestion getMark(IStudentTestQuestion studentTestQuestion);
 
-    public String validResponse(StudentTestQuestion studentTestQuestion, Response response);
+    public String validResponse(IStudentTestQuestion studentTestQuestion, Response response);
 }

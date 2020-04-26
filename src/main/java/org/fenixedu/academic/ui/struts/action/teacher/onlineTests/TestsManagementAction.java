@@ -25,7 +25,9 @@ package org.fenixedu.academic.ui.struts.action.teacher.onlineTests;
 import com.google.common.base.Strings;
 import com.google.common.collect.Ordering;
 import com.google.common.io.BaseEncoding;
+
 import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.*;
 import org.apache.struts.util.LabelValueBean;
 import org.fenixedu.academic.domain.*;
@@ -56,12 +58,14 @@ import org.fenixedu.bennu.struts.portal.StrutsFunctionality;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
 import pt.ist.fenixWebFramework.servlets.filters.contentRewrite.GenericChecksumRewriter;
 import pt.ist.fenixframework.FenixFramework;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -1227,28 +1231,13 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
             throw new FenixActionException(e);
         }
         for (int i = 0; i < infoStudentTestQuestionList.size(); i++) {
-            InfoStudentTestQuestion infoStudentTestQuestion = infoStudentTestQuestionList.get(i);
-
-            if (infoStudentTestQuestion.getQuestion().getQuestionType().getType().intValue() == QuestionType.STR
-                    && ((ResponseSTR) infoStudentTestQuestion.getResponse()).getResponse() != null) {
-                request.setAttribute("question" + i, ((ResponseSTR) infoStudentTestQuestion.getResponse()).getResponse());
-            } else if (infoStudentTestQuestion.getQuestion().getQuestionType().getType().intValue() == QuestionType.NUM
-                    && ((ResponseNUM) infoStudentTestQuestion.getResponse()).getResponse() != null) {
-                request.setAttribute("question" + i, ((ResponseNUM) infoStudentTestQuestion.getResponse()).getResponse());
-            } else if (infoStudentTestQuestion.getQuestion().getQuestionType().getType().intValue() == QuestionType.LID
-                    && ((ResponseLID) infoStudentTestQuestion.getResponse()).getResponse() != null) {
-                if (infoStudentTestQuestion.getQuestion().getQuestionType().getCardinalityType().getType().intValue() == CardinalityType.SINGLE) {
-                    request.setAttribute("question" + i, ((ResponseLID) infoStudentTestQuestion.getResponse()).getResponse()[0]);
-                } else {
-                    request.setAttribute("question" + i, ((ResponseLID) infoStudentTestQuestion.getResponse()).getResponse());
-                }
-            }
+            request.setAttribute("question" + i, "");
         }
 
         request.setAttribute("studentTestForm", form);
         request.setAttribute("simulate", new Boolean(true));
-        request.setAttribute("infoStudentTestQuestionList", infoStudentTestQuestionList);
-        return doForward(request, "doTestSimulation");
+        request.setAttribute("studentTestQuestionList", infoStudentTestQuestionList);
+        return doForward(request, "simulateTest");
     }
 
     public ActionForward simulateTest(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -1288,14 +1277,29 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
         }
         Response[] userResponse = new Response[test.getTestQuestionsSet().size()];
         for (int i = 0; i < test.getTestQuestionsSet().size(); i++) {
+            Response studentResponse = null;
             if (new Integer(questionTypes[i]).intValue() == QuestionType.STR) {
-                userResponse[i] = new ResponseSTR(request.getParameter("question" + i));
+                String responseOp = request.getParameter("question" + i);
+                studentResponse = new ResponseSTR(responseOp);
+                if (Strings.isNullOrEmpty(responseOp)) {
+                    studentResponse.setResponsed(false);
+                }
             } else if (new Integer(questionTypes[i]).intValue() == QuestionType.NUM) {
-                userResponse[i] = new ResponseNUM(request.getParameter("question" + i));
+                String responseOp = request.getParameter("question" + i);
+                studentResponse = new ResponseNUM(responseOp);
+                if (Strings.isNullOrEmpty(responseOp)) {
+                    studentResponse.setResponsed(false);
+                }
             } else if (new Integer(questionTypes[i]).intValue() == QuestionType.LID) {
-                userResponse[i] = new ResponseLID(request.getParameterValues("question" + i));
+                String[] responseOp = request.getParameterValues("question" + i);
+                studentResponse = new ResponseLID(responseOp);
+                if (responseOp == null || responseOp.length == 0) {
+                    studentResponse.setResponsed(false);
+                }
             }
+            userResponse[i] = studentResponse;
         }
+
         InfoSiteStudentTestFeedback infoSiteStudentTestFeedback = null;
         try {
             infoSiteStudentTestFeedback =
@@ -1310,34 +1314,29 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
             List infoStudentTestQuestionList = infoSiteStudentTestFeedback.getStudentTestQuestionList();
             for (int i = 0; i < infoStudentTestQuestionList.size(); i++) {
                 InfoStudentTestQuestion infoStudentTestQuestion = (InfoStudentTestQuestion) infoStudentTestQuestionList.get(i);
-
-                if (infoStudentTestQuestion.getQuestion().getQuestionType().getType().intValue() == QuestionType.STR
+                SubQuestion subQuestion = infoStudentTestQuestion.getSubQuestionByItem();
+                if (subQuestion.getQuestionType().getType().intValue() == QuestionType.STR
                         && ((ResponseSTR) infoStudentTestQuestion.getResponse()).getResponse() != null) {
                     request.setAttribute("question" + i, ((ResponseSTR) infoStudentTestQuestion.getResponse()).getResponse());
-                } else if (infoStudentTestQuestion.getQuestion().getQuestionType().getType().intValue() == QuestionType.NUM
+                } else if (subQuestion.getQuestionType().getType().intValue() == QuestionType.NUM
                         && ((ResponseNUM) infoStudentTestQuestion.getResponse()).getResponse() != null) {
                     request.setAttribute("question" + i, ((ResponseNUM) infoStudentTestQuestion.getResponse()).getResponse());
-                } else if (infoStudentTestQuestion.getQuestion().getQuestionType().getType().intValue() == QuestionType.LID
+                } else if (subQuestion.getQuestionType().getType().intValue() == QuestionType.LID
                         && ((ResponseLID) infoStudentTestQuestion.getResponse()).getResponse() != null) {
-                    if (infoStudentTestQuestion.getQuestion().getQuestionType().getCardinalityType().getType().intValue() == CardinalityType.SINGLE) {
+                    if (subQuestion.getQuestionType().getCardinalityType().getType().intValue() == CardinalityType.SINGLE) {
                         request.setAttribute("question" + i,
                                 ((ResponseLID) infoStudentTestQuestion.getResponse()).getResponse()[0]);
                     } else {
                         request.setAttribute("question" + i, ((ResponseLID) infoStudentTestQuestion.getResponse()).getResponse());
                     }
                 }
-                if (((InfoStudentTestQuestion) infoSiteStudentTestFeedback.getStudentTestQuestionList().iterator().next())
-                        .getDistributedTest().getCorrectionAvailability().getAvailability().intValue() == CorrectionAvailability.ALWAYS) {
-                    request.setAttribute("infoStudentTestQuestionList", infoSiteStudentTestFeedback.getStudentTestQuestionList());
-                }
             }
+            request.setAttribute("studentTestQuestionList", infoSiteStudentTestFeedback.getStudentTestQuestionList());
             if (request.getAttribute("showCorrection") != null) {
-                request.setAttribute("infoStudentTestQuestionList", infoSiteStudentTestFeedback.getStudentTestQuestionList());
                 return doForward(request, "showSimulationCorrection");
             }
             if (request.getAttribute("doTestSimulation") != null || request.getParameter("doTestSimulation") != null) {
-                request.setAttribute("infoStudentTestQuestionList", infoSiteStudentTestFeedback.getStudentTestQuestionList());
-                return doForward(request, "doTestSimulation");
+                return doForward(request, "simulateTest");
             }
 
         }

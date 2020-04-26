@@ -32,12 +32,13 @@ import java.util.Set;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.collections.comparators.ComparatorChain;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.bennu.core.domain.Bennu;
 
 /**
  * @author Susana Fernandes
  */
-public class StudentTestQuestion extends StudentTestQuestion_Base {
+public class StudentTestQuestion extends StudentTestQuestion_Base implements IStudentTestQuestion{
     private static InheritableThreadLocal<Map<StudentTestQuestion, List<SubQuestion>>> studentSubQuestions =
             new InheritableThreadLocal<Map<StudentTestQuestion, List<SubQuestion>>>();
 

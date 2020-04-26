@@ -23,6 +23,7 @@
 package org.fenixedu.academic.service.strategy.tests.strategys;
 
 import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.academic.util.tests.CardinalityType;
 import org.fenixedu.academic.util.tests.QuestionType;
 import org.fenixedu.academic.util.tests.ResponseLID;
@@ -35,7 +36,7 @@ import org.fenixedu.academic.util.tests.ResponseProcessing;
 public class IMS_LIDQuestionCorrectionStrategy extends QuestionCorrectionStrategy {
 
     @Override
-    public StudentTestQuestion getMark(StudentTestQuestion studentTestQuestion) {
+    public IStudentTestQuestion getMark(IStudentTestQuestion studentTestQuestion) {
         if (studentTestQuestion.getSubQuestionByItem().getQuestionType().getType().intValue() == QuestionType.LID) {
             if (studentTestQuestion.getSubQuestionByItem().getQuestionType().getCardinalityType().getType().intValue() == CardinalityType.MULTIPLE) {
                 ResponseProcessing responseProcessing =
@@ -62,7 +63,7 @@ public class IMS_LIDQuestionCorrectionStrategy extends QuestionCorrectionStrateg
         return studentTestQuestion;
     }
 
-    private StudentTestQuestion setStudentTestQuestionResponse(StudentTestQuestion studentTestQuestion,
+    private IStudentTestQuestion setStudentTestQuestionResponse(IStudentTestQuestion studentTestQuestion,
             ResponseProcessing responseProcessing) {
         studentTestQuestion.setTestQuestionMark(responseProcessing.getResponseValue());
         ResponseLID r = (ResponseLID) studentTestQuestion.getResponse();
