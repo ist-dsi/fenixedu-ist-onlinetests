@@ -25,7 +25,7 @@ package org.fenixedu.academic.service.strategy.tests.strategys;
 import java.util.Iterator;
 import java.util.List;
 
-import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.academic.util.tests.CardinalityType;
 import org.fenixedu.academic.util.tests.QuestionOption;
 import org.fenixedu.academic.util.tests.RenderChoise;
@@ -162,7 +162,7 @@ public abstract class QuestionCorrectionStrategy implements IQuestionCorrectionS
     }
 
     @Override
-    public String validResponse(StudentTestQuestion studentTestQuestion, Response newResponse) {
+    public String validResponse(IStudentTestQuestion studentTestQuestion, Response newResponse) {
 
         if (studentTestQuestion.getSubQuestionByItem().getQuestionType().getRender() instanceof RenderFIB) {
             RenderFIB renderFIB = (RenderFIB) studentTestQuestion.getSubQuestionByItem().getQuestionType().getRender();

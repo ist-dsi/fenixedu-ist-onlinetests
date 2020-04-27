@@ -17,18 +17,37 @@
  * along with FenixEdu Core.  If not, see <http://www.gnu.org/licenses/>.
  */
 /*
- * Created on 23/Set/2004
- *
+ * Created on 28/Ago/2003
  */
-package org.fenixedu.academic.service.strategy.tests;
+package org.fenixedu.academic.dto.onlineTests;
 
-import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
-import org.fenixedu.academic.service.strategy.tests.strategys.IQuestionCorrectionStrategy;
+import java.util.List;
+
+import org.fenixedu.academic.domain.onlineTests.SubQuestion;
+import org.fenixedu.academic.util.tests.CorrectionFormula;
+import org.fenixedu.academic.util.tests.Response;
 
 /**
  * @author Susana Fernandes
- * 
  */
-public interface IQuestionCorrectionStrategyFactory {
-    public abstract IQuestionCorrectionStrategy getQuestionCorrectionStrategy(IStudentTestQuestion studentTestQuestion);
+public interface IStudentTestQuestion {
+    
+    public CorrectionFormula getCorrectionFormula();
+    
+    public Response getResponse();
+    
+    public void setResponse(Response response);
+    
+    public Double getTestQuestionValue();
+    
+    public Integer getTestQuestionOrder();
+    
+    public void setTestQuestionMark(Double mark);
+    
+    public SubQuestion getSubQuestionByItem();
+    
+    public List<SubQuestion> getStudentSubQuestions();
+    
+    public String getItemId();
+
 }

@@ -21,8 +21,16 @@
  */
 package org.fenixedu.academic.dto.onlineTests;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.fenixedu.academic.domain.onlineTests.DistributedTest;
+import org.fenixedu.academic.domain.onlineTests.Question;
 import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.domain.onlineTests.SubQuestion;
 import org.fenixedu.academic.dto.InfoObject;
 import org.fenixedu.academic.dto.InfoStudent;
 import org.fenixedu.academic.util.tests.CorrectionFormula;
@@ -31,13 +39,14 @@ import org.fenixedu.academic.util.tests.Response;
 /**
  * @author Susana Fernandes
  */
-public class InfoStudentTestQuestion extends InfoObject implements Comparable {
+public class InfoStudentTestQuestion implements IStudentTestQuestion, Serializable  {
 
-    private InfoStudent student;
+    private static InheritableThreadLocal<Map<InfoStudentTestQuestion, List<SubQuestion>>> studentSubQuestions =
+            new InheritableThreadLocal<Map<InfoStudentTestQuestion, List<SubQuestion>>>();
 
-    private DistributedTest distributedTest;
+    private InfoDistributedTest distributedTest;
 
-    private InfoQuestion question;
+    private Question question;
 
     private Integer testQuestionOrder;
 
@@ -52,11 +61,13 @@ public class InfoStudentTestQuestion extends InfoObject implements Comparable {
     private Response response;
 
     private CorrectionFormula formula;
+    
+    private String itemId;
 
     public InfoStudentTestQuestion() {
     }
 
-    public DistributedTest getDistributedTest() {
+    public InfoDistributedTest getDistributedTest() {
         return distributedTest;
     }
 
@@ -64,16 +75,12 @@ public class InfoStudentTestQuestion extends InfoObject implements Comparable {
         return optionShuffle;
     }
 
-    public InfoQuestion getQuestion() {
+    public Question getQuestion() {
         return question;
     }
 
     public Integer getOldResponse() {
         return oldResponse;
-    }
-
-    public InfoStudent getStudent() {
-        return student;
     }
 
     public Integer getTestQuestionOrder() {
@@ -92,7 +99,7 @@ public class InfoStudentTestQuestion extends InfoObject implements Comparable {
         return response;
     }
 
-    public void setDistributedTest(DistributedTest test) {
+    public void setDistributedTest(InfoDistributedTest test) {
         distributedTest = test;
     }
 
@@ -100,16 +107,12 @@ public class InfoStudentTestQuestion extends InfoObject implements Comparable {
         optionShuffle = string;
     }
 
-    public void setQuestion(InfoQuestion question) {
+    public void setQuestion(Question question) {
         this.question = question;
     }
 
     public void setOldResponse(Integer response) {
         this.oldResponse = response;
-    }
-
-    public void setStudent(InfoStudent student) {
-        this.student = student;
     }
 
     public void setTestQuestionOrder(Integer integer) {
@@ -135,58 +138,51 @@ public class InfoStudentTestQuestion extends InfoObject implements Comparable {
     public void setCorrectionFormula(CorrectionFormula formula) {
         this.formula = formula;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        boolean result = false;
-        if (obj instanceof InfoStudentTestQuestion) {
-            InfoStudentTestQuestion infoStudentTestQuestion = (InfoStudentTestQuestion) obj;
-            result = getExternalId().equals(infoStudentTestQuestion.getExternalId());
-            result =
-                    result || (getStudent().equals(infoStudentTestQuestion.getStudent()))
-                            && (getDistributedTest().equals(infoStudentTestQuestion.getDistributedTest()))
-                            && (getQuestion().equals(infoStudentTestQuestion.getQuestion()))
-                            && (getTestQuestionOrder().equals(infoStudentTestQuestion.getTestQuestionOrder()))
-                            && (getTestQuestionValue().equals(infoStudentTestQuestion.getTestQuestionValue()))
-                            && (getOldResponse().equals(infoStudentTestQuestion.getOldResponse()))
-                            && (getOptionShuffle().equals(infoStudentTestQuestion.getOptionShuffle()))
-                            && (getTestQuestionMark().equals(infoStudentTestQuestion.getTestQuestionMark()));
+    
+    public List<SubQuestion> getStudentSubQuestions() {
+        if (studentSubQuestions.get() == null) {
+            studentSubQuestions.set(new HashMap<InfoStudentTestQuestion, List<SubQuestion>>());
         }
-        return result;
+
+        return studentSubQuestions.get().get(this);
     }
 
-    @Override
-    public int compareTo(Object o) {
-        InfoStudentTestQuestion infoStudentTestQuestion = (InfoStudentTestQuestion) o;
-        return getTestQuestionOrder().compareTo(infoStudentTestQuestion.getTestQuestionOrder());
+    public void setStudentSubQuestions(List<SubQuestion> studentSubQuestions) {
+        getStudentSubQuestions();
+        this.studentSubQuestions.get().put(this, studentSubQuestions);
     }
-
-    public void copyFromDomain(StudentTestQuestion studentTestQuestion) {
-        super.copyFromDomain(studentTestQuestion);
-        if (studentTestQuestion != null) {
-            setTestQuestionMark(studentTestQuestion.getTestQuestionMark());
-            setTestQuestionOrder(studentTestQuestion.getTestQuestionOrder());
-            setTestQuestionValue(studentTestQuestion.getTestQuestionValue());
-            setOptionShuffle(studentTestQuestion.getOptionShuffle());
-            setCorrectionFormula(studentTestQuestion.getCorrectionFormula());
-            // if (studentTestQuestion.getResponse() != null) {
-            // XMLDecoder decoder = new XMLDecoder(new
-            // ByteArrayInputStream(studentTestQuestion.getResponse().getBytes())
-            // );
-            // setResponse((Response) decoder.readObject());
-            // decoder.close();
-            // }
-            setResponse(studentTestQuestion.getResponse());
+    
+    public void addStudentSubQuestion(SubQuestion subQuestion) {
+        if (getStudentSubQuestions() == null) {
+            setStudentSubQuestions(new ArrayList<SubQuestion>());
         }
+        getStudentSubQuestions().add(subQuestion);
+    }
+    
+
+    public SubQuestion getSubQuestionByItem() {
+        if (getItemId() == null && !getStudentSubQuestions().isEmpty() && getStudentSubQuestions().size() == 1) {
+            return getStudentSubQuestions().iterator().next();
+        }
+        for (SubQuestion subQuestion : getStudentSubQuestions()) {
+            if (getItemId() != null && subQuestion.getItemId() != null) {
+                if (getItemId().equals(subQuestion.getItemId())) {
+                    return subQuestion;
+                }
+            } else if (getItemId() == null && subQuestion.getItemId() == null) {
+                return subQuestion;
+            }
+        }
+        return null;
     }
 
-    public static InfoStudentTestQuestion newInfoFromDomain(StudentTestQuestion studentTestQuestion) {
-        InfoStudentTestQuestion infoStudentTestQuestion = null;
-        if (studentTestQuestion != null) {
-            infoStudentTestQuestion = new InfoStudentTestQuestion();
-            infoStudentTestQuestion.copyFromDomain(studentTestQuestion);
-        }
-        return infoStudentTestQuestion;
+    public String getItemId() {
+        return itemId;
     }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
 
 }

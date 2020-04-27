@@ -25,7 +25,7 @@ package org.fenixedu.academic.service.strategy.tests.strategys;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.academic.util.tests.CardinalityType;
 import org.fenixedu.academic.util.tests.QuestionType;
 import org.fenixedu.academic.util.tests.ResponseCondition;
@@ -39,7 +39,7 @@ import org.fenixedu.academic.util.tests.ResponseProcessing;
 public class FENIX_LIDQuestionCorrectionStrategy extends QuestionCorrectionStrategy {
 
     @Override
-    public StudentTestQuestion getMark(StudentTestQuestion studentTestQuestion) {
+    public IStudentTestQuestion getMark(IStudentTestQuestion studentTestQuestion) {
         if (studentTestQuestion.getSubQuestionByItem().getQuestionType().getType().intValue() == QuestionType.LID) {
             Integer fenixCorrectResponseIndex =
                     getFenixCorrectResponseIndex(studentTestQuestion.getSubQuestionByItem().getResponseProcessingInstructions());

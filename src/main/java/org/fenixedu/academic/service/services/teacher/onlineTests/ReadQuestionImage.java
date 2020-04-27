@@ -22,18 +22,11 @@
  */
 package org.fenixedu.academic.service.services.teacher.onlineTests;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.struts.util.LabelValueBean;
+import org.fenixedu.academic.domain.onlineTests.DistributedTest;
 import org.fenixedu.academic.domain.onlineTests.Question;
-import org.fenixedu.academic.domain.onlineTests.Test;
-import org.fenixedu.academic.domain.onlineTests.TestQuestion;
 import org.fenixedu.academic.domain.onlineTests.utils.ParseSubQuestion;
-import org.fenixedu.academic.dto.onlineTests.InfoQuestion;
 import org.fenixedu.academic.dto.onlineTests.InfoStudentTestQuestion;
 import org.fenixedu.academic.service.services.exceptions.FenixServiceException;
-import org.fenixedu.academic.util.tests.QuestionOption;
 import org.fenixedu.academic.utils.ParseQuestionException;
 
 import pt.ist.fenixframework.Atomic;
@@ -69,14 +62,8 @@ public class ReadQuestionImage {
     public static String run(String distributedTestId, String questionId, String optionShuffle, Integer imageId,
             Integer feedbackId) throws FenixServiceException {
 
-        Question question = null;
-        Test test = FenixFramework.getDomainObject(distributedTestId);
-        for (TestQuestion testQuestion : test.getTestQuestionsSet()) {
-            if (testQuestion.getQuestion().getExternalId().equals(questionId)) {
-                question = testQuestion.getQuestion();
-                break;
-            }
-        }
+        DistributedTest distributedTest = FenixFramework.getDomainObject(distributedTestId);
+        Question question = FenixFramework.getDomainObject(questionId);
         if (question == null) {
             throw new FenixServiceException("Unexisting Question!!!!!");
         }
@@ -84,55 +71,15 @@ public class ReadQuestionImage {
         InfoStudentTestQuestion infoStudentTestQuestion = new InfoStudentTestQuestion();
         try {
             ParseSubQuestion parse = new ParseSubQuestion();
-            infoStudentTestQuestion.setQuestion(InfoQuestion.newInfoFromDomain(question));
+            infoStudentTestQuestion.setQuestion(question);
             infoStudentTestQuestion.setOptionShuffle(optionShuffle);
-            // infoStudentTestQuestion =
-            // parse.parseStudentTestQuestion(infoStudentTestQuestion,
-            // path.replace('\\', '/'));
+            infoStudentTestQuestion = parse.parseStudentTestQuestion(infoStudentTestQuestion, distributedTest.getTestType());
         } catch (Exception e) {
             throw new FenixServiceException(e);
         }
-        Iterator questionit = infoStudentTestQuestion.getQuestion().getQuestion().iterator();
-        int imgIndex = 0;
-        while (questionit.hasNext()) {
-            LabelValueBean lvb = (LabelValueBean) questionit.next();
-            if (lvb.getLabel().startsWith("image/")) {
-                imgIndex++;
-                if (imgIndex == imageId.intValue()) {
-                    return lvb.getValue();
-                }
-            }
+        if (question.getSubQuestions().size() < imageId) {
+            return null;
         }
-        Iterator optionit = infoStudentTestQuestion.getQuestion().getOptions().iterator();
-        while (optionit.hasNext()) {
-            List optionContent = ((QuestionOption) optionit.next()).getOptionContent();
-            for (int i = 0; i < optionContent.size(); i++) {
-                LabelValueBean lvb = (LabelValueBean) optionContent.get(i);
-                if (lvb.getLabel().startsWith("image/")) {
-                    imgIndex++;
-                    if (imgIndex == imageId.intValue()) {
-                        return lvb.getValue();
-                    }
-                }
-            }
-        }
-
-        // if (feedbackId != null) {
-        // Iterator feedbackit = ((ResponseProcessing)
-        // infoStudentTestQuestion.getQuestion().getResponseProcessingInstructions
-        // ().get(
-        // new Integer(feedbackId).intValue())).getFeedback().iterator();
-        //
-        // while (feedbackit.hasNext()) {
-        // LabelValueBean lvb = (LabelValueBean) feedbackit.next();
-        // if (lvb.getLabel().startsWith("image/")) {
-        // imgIndex++;
-        // if (imgIndex == imageId.intValue())
-        // return lvb.getValue();
-        // }
-        // }
-        // }
-
-        return null;
+        return question.getSubQuestions().get(imageId).getImage(imageId, feedbackId);
     }
 }

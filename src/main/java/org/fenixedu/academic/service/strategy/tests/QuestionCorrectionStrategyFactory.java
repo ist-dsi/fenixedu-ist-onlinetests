@@ -22,7 +22,7 @@
  */
 package org.fenixedu.academic.service.strategy.tests;
 
-import org.fenixedu.academic.domain.onlineTests.StudentTestQuestion;
+import org.fenixedu.academic.dto.onlineTests.IStudentTestQuestion;
 import org.fenixedu.academic.service.strategy.tests.strategys.FENIX_LIDQuestionCorrectionStrategy;
 import org.fenixedu.academic.service.strategy.tests.strategys.FENIX_NUMQuestionCorrectionStrategy;
 import org.fenixedu.academic.service.strategy.tests.strategys.FENIX_STRQuestionCorrectionStrategy;
@@ -57,7 +57,7 @@ public class QuestionCorrectionStrategyFactory implements IQuestionCorrectionStr
     }
 
     @Override
-    public IQuestionCorrectionStrategy getQuestionCorrectionStrategy(StudentTestQuestion studentTestQuestion) {
+    public IQuestionCorrectionStrategy getQuestionCorrectionStrategy(IStudentTestQuestion studentTestQuestion) {
         IQuestionCorrectionStrategy questionCorrectionStrategy = null;
         if (studentTestQuestion.getCorrectionFormula().getFormula().equals(Integer.valueOf(CorrectionFormula.IMS))) {
             if (studentTestQuestion.getSubQuestionByItem().getQuestionType().getType().intValue() == QuestionType.LID) {
