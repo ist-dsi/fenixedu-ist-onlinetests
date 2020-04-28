@@ -59,6 +59,10 @@
 		<logic:notEqual name="correctionType" value="studentCorrection">
 			<html:hidden alt='<%="questionCode"+questionIndex%>' property='<%="questionCode"+questionIndex%>' value="<%= questionCode.toString() %>"/>
 			<html:hidden alt='<%="questionType"+questionIndex%>' property='<%="questionType"+questionIndex%>' value="<%= questionType.toString() %>"/>
+			<logic:equal name="questionType" value="<%=String.valueOf(org.fenixedu.academic.util.tests.QuestionType.LID) %>">
+				<bean:define id="optionShuffle" name="testQuestion" property="optionShuffle"/>
+				<html:hidden alt='<%="optionShuffle"+questionIndex%>' property='<%="optionShuffle"+questionIndex%>' value="<%= optionShuffle.toString() %>"/>
+			</logic:equal>
 		</logic:notEqual>
 		
 		<bean:define id="mark" name="testQuestion" property="testQuestionMark"/>
