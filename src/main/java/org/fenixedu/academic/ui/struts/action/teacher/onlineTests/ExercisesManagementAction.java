@@ -839,11 +839,11 @@ public class ExercisesManagementAction extends ExecutionCourseBaseAction {
     public ActionForward exportExerciseVariation(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws FenixActionException {
         Question question = getDomainObject(request, "variationCode");
-        response.setContentType("text/plain; charset=utf-8");
+        response.setContentType("text/plain");
         response.setHeader("Content-disposition", "attachment; filename=" + question.getXmlFileName());
         try {
             final ServletOutputStream writer = response.getOutputStream();
-            writer.write(question.getXmlFile().getBytes());
+            writer.write(question.getXmlFile().getBytes("ISO-8859-1"));
             writer.flush();
             response.flushBuffer();
         } catch (IOException e) {
