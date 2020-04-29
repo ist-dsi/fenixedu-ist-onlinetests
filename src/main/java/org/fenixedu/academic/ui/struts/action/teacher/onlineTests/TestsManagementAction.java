@@ -1231,7 +1231,12 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
             throw new FenixActionException(e);
         }
         for (int i = 0; i < infoStudentTestQuestionList.size(); i++) {
-            request.setAttribute("question" + i, "");
+            InfoStudentTestQuestion infoStudentTestQuestion = infoStudentTestQuestionList.get(i);
+            if(infoStudentTestQuestion.getSubQuestionByItem().getQuestionType().getType().intValue() == QuestionType.LID){
+                request.setAttribute("question" + i, null);
+            }else{
+                request.setAttribute("question" + i, "");
+            }
         }
 
         request.setAttribute("studentTestForm", form);
