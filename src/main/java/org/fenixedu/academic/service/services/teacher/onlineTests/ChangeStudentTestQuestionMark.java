@@ -129,7 +129,7 @@ public class ChangeStudentTestQuestionMark {
                 
             }
             String event = BundleUtil.getString(Bundle.APPLICATION, "message.changeStudentMarkLogMessage", newMark.toString());
-            new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event);
+            new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event, null);
         }
     }
 

@@ -50,7 +50,7 @@ import pt.ist.fenixframework.Atomic;
 public class GiveUpQuestion {
 
     @Atomic
-    public static void run(Registration registration, DistributedTest distributedTest, String exerciseCode, Integer itemCode)
+    public static void run(Registration registration, DistributedTest distributedTest, String exerciseCode, Integer itemCode, String studentIP)
             throws FenixServiceException {
         check(RolePredicates.STUDENT_PREDICATE);
         if (distributedTest == null) {
@@ -112,7 +112,7 @@ public class GiveUpQuestion {
         }
 
         new StudentTestLog(distributedTest, registration, "Desistiu da pergunta/alínea: "
-                + thisStudentTestQuestion.getTestQuestionOrder());
+                + thisStudentTestQuestion.getTestQuestionOrder(), studentIP);
         return;
     }
 

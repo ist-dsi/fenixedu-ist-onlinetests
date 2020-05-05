@@ -48,15 +48,15 @@ import pt.ist.fenixframework.FenixFramework;
 public class ReadStudentTest {
 
     @Atomic
-    public static List<StudentTestQuestion> run(Registration registration, String distributedTestId, Boolean log)
+    public static List<StudentTestQuestion> run(Registration registration, String distributedTestId, Boolean log, String studentIP)
             throws FenixServiceException {
         check(RolePredicates.STUDENT_PREDICATE);
         final DistributedTest distributedTest = FenixFramework.getDomainObject(distributedTestId);
-        return run(registration, distributedTest, log);
+        return run(registration, distributedTest, log, studentIP);
     }
 
     @Atomic
-    public static List<StudentTestQuestion> run(Registration registration, DistributedTest distributedTest, Boolean log)
+    public static List<StudentTestQuestion> run(Registration registration, DistributedTest distributedTest, Boolean log, String studentIP)
             throws FenixServiceException {
         check(RolePredicates.STUDENT_PREDICATE);
         if (distributedTest == null) {
@@ -77,7 +77,7 @@ public class ReadStudentTest {
             studentTestQuestionList.add(studentTestQuestion);
         }
         if (log.booleanValue()) {
-            StudentTestLog studentTestLog = new StudentTestLog(distributedTest, registration, "Ler Ficha de Trabalho");
+            new StudentTestLog(distributedTest, registration, "Ler Ficha de Trabalho", studentIP);
         }
         return studentTestQuestionList;
     }
@@ -96,32 +96,32 @@ public class ReadStudentTest {
 
     @Atomic
     public static List<StudentTestQuestion> runReadStudentTestForCorrection(Registration registration, String distributedTestId,
-            Boolean log) throws FenixServiceException, NotAuthorizedException {
+            Boolean log, String studentIP) throws FenixServiceException, NotAuthorizedException {
         ReadStudentTestForCorrectionFilter.instance.execute(distributedTestId);
-        return run(registration, distributedTestId, log);
+        return run(registration, distributedTestId, log, studentIP);
     }
 
     @Atomic
     public static List<StudentTestQuestion> runReadStudentTestForCorrection(Registration registration,
-            DistributedTest distributedTest, Boolean log) throws FenixServiceException, NotAuthorizedException {
+            DistributedTest distributedTest, Boolean log, String studentIP) throws FenixServiceException, NotAuthorizedException {
         ReadStudentTestForCorrectionFilter.instance.execute(distributedTest.getExternalId());
-        return run(registration, distributedTest, log);
+        return run(registration, distributedTest, log, studentIP);
     }
 
     // Service Invokers migrated from Berserk
 
     @Atomic
     public static List<StudentTestQuestion> runReadStudentTestToDo(Registration registration, String distributedTestId,
-            Boolean log) throws FenixServiceException, NotAuthorizedException {
+            Boolean log, String studentIP) throws FenixServiceException, NotAuthorizedException {
         ReadStudentTestToDoFilter.instance.execute(distributedTestId);
-        return run(registration, distributedTestId, log);
+        return run(registration, distributedTestId, log, studentIP);
     }
 
     @Atomic
     public static List<StudentTestQuestion> runReadStudentTestToDo(Registration registration, DistributedTest distributedTest,
-            Boolean log) throws FenixServiceException, NotAuthorizedException {
+            Boolean log, String studentIP) throws FenixServiceException, NotAuthorizedException {
         ReadStudentTestToDoFilter.instance.execute(distributedTest.getExternalId());
-        return run(registration, distributedTest, log);
+        return run(registration, distributedTest, log, studentIP);
     }
 
 }

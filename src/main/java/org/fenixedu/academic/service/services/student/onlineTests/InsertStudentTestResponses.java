@@ -66,8 +66,8 @@ public class InsertStudentTestResponses {
     private static String path;
 
     @Atomic
-    public static InfoSiteStudentTestFeedback run(Registration registration, Integer studentNumber,
-            final String distributedTestId, Response[] response) throws FenixServiceException {
+    public static InfoSiteStudentTestFeedback run(Registration registration, Integer studentNumber, final String distributedTestId,
+            Response[] response, String studentIP) throws FenixServiceException {
         check(RolePredicates.STUDENT_PREDICATE);
 
         ServiceMonitoring.logService(InsertStudentTestResponses.class, registration, studentNumber, distributedTestId, response,
@@ -204,7 +204,7 @@ public class InsertStudentTestResponses {
                 String grade = df.format(Math.max(0, totalMark));
                 mark.setMark(grade);
             }
-            StudentTestLog studentTestLog = new StudentTestLog(distributedTest, registration, event);
+            StudentTestLog studentTestLog = new StudentTestLog(distributedTest, registration, event, studentIP);
             infoSiteStudentTestFeedback.setStudentTestLog(studentTestLog);
         } else {
             throw new NotAuthorizedException();
@@ -214,6 +214,7 @@ public class InsertStudentTestResponses {
         infoSiteStudentTestFeedback.setErrors(errors);
         return infoSiteStudentTestFeedback;
     }
+
 
     private static boolean compareDates(Calendar date, Calendar hour) {
         Calendar calendar = Calendar.getInstance();

@@ -37,7 +37,7 @@ import com.google.common.hash.Hashing;
  */
 public class StudentTestLog extends StudentTestLog_Base {
 
-    public StudentTestLog(DistributedTest distributedTest, Registration student, String event) {
+    public StudentTestLog(DistributedTest distributedTest, Registration student, String event, String studentIP) {
         super();
         setRootDomainObject(Bennu.getInstance());
         setDistributedTest(distributedTest);
@@ -45,6 +45,7 @@ public class StudentTestLog extends StudentTestLog_Base {
         DateTime now = new DateTime();
         setDateDateTime(now);
         setEvent(event);
+        setStudentIP(studentIP);
         setChecksum(getChecksum(distributedTest, student, now));
     }
 

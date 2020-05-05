@@ -67,6 +67,7 @@ class onlineTests.StudentTestLog  {
     DateTime dateDateTime;
     String event;
     String checksum;
+    String studentIP;
 }
 
 class onlineTests.StudentTestQuestion  {

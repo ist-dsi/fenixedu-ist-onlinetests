@@ -163,7 +163,7 @@ public class ChangeStudentTestQuestion {
                             BundleUtil.getString(Bundle.APPLICATION, "message.changeStudentQuestionLogMessage",
                                     studentTestQuestion.getTestQuestionOrder().toString());
 
-                    new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event);
+                    new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event, null);
                 }
 
             }
