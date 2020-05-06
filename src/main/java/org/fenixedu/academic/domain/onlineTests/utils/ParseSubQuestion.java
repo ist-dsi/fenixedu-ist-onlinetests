@@ -502,7 +502,7 @@ public class ParseSubQuestion extends DefaultHandler {
                     }
                 }
             } else if (tag.equals("respcondition")) {
-                if (responseProcessing != null) {
+                if (responseProcessing != null && responseProcessing.getResponseConditions().size() != 0) {
                     auxList.add(responseProcessing);
                 }
                 responseProcessingId++;
@@ -593,7 +593,7 @@ public class ParseSubQuestion extends DefaultHandler {
                 }
             }
         }
-        if (responseProcessing != null) {
+        if (responseProcessing != null && responseProcessing.getResponseConditions().size() != 0) {
             auxList.add(responseProcessing);
         }
         subQuestion.setResponseProcessingInstructions(auxList);
