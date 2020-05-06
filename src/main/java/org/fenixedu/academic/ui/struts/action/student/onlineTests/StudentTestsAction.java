@@ -212,7 +212,7 @@ public class StudentTestsAction extends FenixDispatchAction {
 
         List<StudentTestQuestion> studentTestQuestionList = null;
         try {
-            studentTestQuestionList = ReadStudentTest.runReadStudentTestToDo(registration, distributedTest, new Boolean(true));
+            studentTestQuestionList = ReadStudentTest.runReadStudentTestToDo(registration, distributedTest, new Boolean(true), getClientIP(request));
         } catch (NotAuthorizedException e) {
             request.setAttribute("cantDoTest", new Boolean(true));
             return mapping.findForward("testError");
@@ -350,7 +350,7 @@ public class StudentTestsAction extends FenixDispatchAction {
 
         List<StudentTestQuestion> studentTestQuestionList;
         try {
-            studentTestQuestionList = ReadStudentTest.runReadStudentTestToDo(registration, testCode, new Boolean(false));
+            studentTestQuestionList = ReadStudentTest.runReadStudentTestToDo(registration, testCode, new Boolean(false), getClientIP(request));
         } catch (NotAuthorizedException e) {
             request.setAttribute("cantDoTest", new Boolean(true));
             return mapping.findForward("testError");
@@ -398,8 +398,8 @@ public class StudentTestsAction extends FenixDispatchAction {
         InfoSiteStudentTestFeedback infoSiteStudentTestFeedback;
         List<StudentTestQuestion> infoStudentTestQuestionList;
         try {
-            infoSiteStudentTestFeedback = InsertStudentTestResponses.run(registration, studentCode, testCode, userResponse);
-            infoStudentTestQuestionList = ReadStudentTest.runReadStudentTestToDo(registration, testCode, new Boolean(false));
+            infoSiteStudentTestFeedback = InsertStudentTestResponses.run(registration, studentCode, testCode, userResponse, getClientIP(request));
+            infoStudentTestQuestionList = ReadStudentTest.runReadStudentTestToDo(registration, testCode, new Boolean(false), getClientIP(request));
         } catch (NotAuthorizedException e) {
             request.setAttribute("cantDoTest", new Boolean(true));
             return mapping.findForward("testError");
@@ -452,6 +452,20 @@ public class StudentTestsAction extends FenixDispatchAction {
         }
 
         return mapping.findForward("studentFeedback");
+    }
+    
+    private static final String[] CLIENT_HEADERS = new String[] {
+        "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR"
+    };
+
+    private static String getClientIP(final HttpServletRequest request) {
+        for (final String header : CLIENT_HEADERS) {
+            final String address = request.getHeader(header);
+            if (address != null && address.length() > 0 && !"unknown".equalsIgnoreCase(address)) {
+                return address;
+            }
+        }
+        return request.getRemoteAddr();
     }
 
     public ActionForward exportChecksum(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -515,7 +529,7 @@ public class StudentTestsAction extends FenixDispatchAction {
 
         Registration registration = Registration.readByUsername(userView.getUsername());
         try {
-            GiveUpQuestion.run(registration, distributedTest, exerciseCode, itemCode);
+            GiveUpQuestion.run(registration, distributedTest, exerciseCode, itemCode, getClientIP(request));
         } catch (IllegalDataAccessException e) {
             request.setAttribute("cantDoTest", new Boolean(true));
             return mapping.findForward("testError");
@@ -558,7 +572,7 @@ public class StudentTestsAction extends FenixDispatchAction {
         }
 
         try {
-            CleanSubQuestions.run(registration, distributedTest, exerciseCode, itemCode);
+            CleanSubQuestions.run(registration, distributedTest, exerciseCode, itemCode, getClientIP(request));
         } catch (IllegalDataAccessException e) {
             request.setAttribute("cantDoTest", new Boolean(true));
             return mapping.findForward("testError");
@@ -589,8 +603,7 @@ public class StudentTestsAction extends FenixDispatchAction {
 
         List<StudentTestQuestion> studentTestQuestionList = null;
         try {
-            studentTestQuestionList =
-                    ReadStudentTest.runReadStudentTestForCorrection(registration, distributedTest, new Boolean(false));
+            studentTestQuestionList = ReadStudentTest.runReadStudentTestForCorrection(registration, distributedTest, new Boolean(false), getClientIP(request));
         } catch (InvalidArgumentsServiceException e) {
             request.setAttribute("invalidTest", new Boolean(true));
             return mapping.findForward("testError");

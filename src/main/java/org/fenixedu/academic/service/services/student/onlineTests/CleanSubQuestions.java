@@ -43,7 +43,7 @@ import pt.ist.fenixframework.Atomic;
 public class CleanSubQuestions {
 
     @Atomic
-    public static void run(Registration registration, DistributedTest distributedTest, String exerciseCode, Integer itemCode)
+    public static void run(Registration registration, DistributedTest distributedTest, String exerciseCode, Integer itemCode, String studentIP)
             throws FenixServiceException {
         check(RolePredicates.STUDENT_PREDICATE);
         if (distributedTest == null) {
@@ -68,7 +68,7 @@ public class CleanSubQuestions {
                 }
             }
         }
-        new StudentTestLog(distributedTest, registration, "Apagou resposta da pergunta/alínea: " + itemCode);
+        new StudentTestLog(distributedTest, registration, "Apagou resposta da pergunta/alínea: " + itemCode, studentIP);
         return;
     }
 

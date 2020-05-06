@@ -103,7 +103,7 @@ public class ChangeStudentTestQuestionValue {
 
             
             String event = BundleUtil.getString(Bundle.APPLICATION, "message.changeStudentValueLogMessage", newValue.toString());
-            new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event);
+            new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event, null);
         }
     }
 
