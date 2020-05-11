@@ -196,8 +196,12 @@
 					<html:img bundle="HTMLALT_RESOURCES" altKey="img.img" align="absmiddle" src="<%= request.getContextPath() + "/oldOnlineTests/testsManagement.do?method=showImage&amp;testCode="+testCode.toString()+"&amp;exerciseCode="+ questionCode +"&amp;studentCode="+ studentId +"&amp;imgCode="+index.toString() +"&amp;imgType="+optionLabel.toString()+"&amp;item="+item.toString()%>"/>
 				</logic:equal>
 				<logic:notEqual name="correctionType" value="studentCorrection">
-					<bean:define id="optionShuffle" name="testQuestion" property="optionShuffle"/>
-					<html:img bundle="HTMLALT_RESOURCES" altKey="img.img" align="absmiddle" src="<%= request.getContextPath() + "/oldOnlineTests/testsManagement.do?method=showImage&amp;testCode="+testCode.toString()+"&amp;exerciseCode="+ questionCode +"&amp;imgCode="+index.toString() +"&amp;imgType="+optionLabel.toString()+"&amp;optionShuffle="+optionShuffle.toString()+"&amp;item="+item.toString()%>"/>
+					<bean:define id="shuffleUrlPart" value=""/>
+					<logic:equal name="questionType" value="<%=String.valueOf(org.fenixedu.academic.util.tests.QuestionType.LID) %>">
+						<bean:define id="optionShuffle" name="testQuestion" property="optionShuffle"/>
+						<bean:define id="shuffleUrlPart" value="<%="&amp;optionShuffle="+optionShuffle.toString()%>"/>
+					</logic:equal>
+					<html:img bundle="HTMLALT_RESOURCES" altKey="img.img" align="absmiddle" src="<%= request.getContextPath() + "/oldOnlineTests/testsManagement.do?method=showImage&amp;testCode="+testCode.toString()+"&amp;exerciseCode="+ questionCode +"&amp;imgCode="+index.toString() +"&amp;imgType="+optionLabel.toString()+"&amp;item="+item.toString()+shuffleUrlPart.toString()%>"/>
 				</logic:notEqual>
 				<logic:equal name="imageLabel" value="true">
 					</td><td>
