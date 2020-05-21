@@ -502,7 +502,7 @@ public class ParseSubQuestion extends DefaultHandler {
                     }
                 }
             } else if (tag.equals("respcondition")) {
-                if (responseProcessing != null && responseProcessing.getResponseConditions().size() != 0) {
+                if (validResponseProcessing(responseProcessing)) {
                     auxList.add(responseProcessing);
                 }
                 responseProcessingId++;
@@ -593,11 +593,15 @@ public class ParseSubQuestion extends DefaultHandler {
                 }
             }
         }
-        if (responseProcessing != null && responseProcessing.getResponseConditions().size() != 0) {
+        if (validResponseProcessing(responseProcessing)) {
             auxList.add(responseProcessing);
         }
         subQuestion.setResponseProcessingInstructions(auxList);
         return subQuestion;
+    }
+    
+    public boolean validResponseProcessing(ResponseProcessing rp) {
+        return rp != null && (rp.getResponseConditions().size() != 0 || rp.isOtherResponseProcessing() || rp.isUnansweredResponseProcessing());
     }
 
     private SubQuestion getFeedback(QuestionElement questionElement, SubQuestion subQuestion) throws ParseQuestionException {
