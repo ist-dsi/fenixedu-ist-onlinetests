@@ -253,6 +253,7 @@ public class ExercisesManagementAction extends ExecutionCourseBaseAction {
                     setSubQuestion(questionType, questionValue, optionNumber, options, correctOptions, shuffle, signal,
                             integerType, evaluationQuestion, caseSensitive, maxChar, cols, rows);
         } catch (ParseQuestionException e) {
+            e.printStackTrace();
             error(request, "createExercise", e.getMessage());
             return prepareCreateExercise(mapping, form, request, response);
         }
@@ -268,6 +269,7 @@ public class ExercisesManagementAction extends ExecutionCourseBaseAction {
                     secondQuestionText, options, correctOptions, shuffle, correctFeedbackText, wrongFeedbackText,
                     breakLineBeforeResponseBox, breakLineAfterResponseBox);
         } catch (FenixServiceException e) {
+            e.printStackTrace();
             error(request, "createExercise", "error.exerciseCreationError");
             return prepareCreateExercise(mapping, form, request, response);
         }
@@ -749,7 +751,7 @@ public class ExercisesManagementAction extends ExecutionCourseBaseAction {
                     try {
                         question = parse.parseSubQuestion(question);
                     } catch (ParseQuestionException e) {
-                        throw new FenixActionException();
+                        throw new FenixActionException(e);
                     }
                 }
             }
