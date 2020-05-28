@@ -63,4 +63,9 @@ public class ResponseSTR extends Response {
         }
         return false;
     }
+    
+    @Override
+    public String toString() {
+        return response;
+    }
 }
