@@ -22,7 +22,6 @@
  */
 package org.fenixedu.academic.domain.onlineTests;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,10 +71,8 @@ public class Question extends Question_Base {
 
     @Override
     public String getXmlFile() {
-        if (getQuestionFile() != null) {
-            return new String(getQuestionFile().getContent(), StandardCharsets.UTF_8);
-        }
-        return super.getXmlFile();
+        final QuestionFile questionFile = getQuestionFile();
+        return questionFile == null ? super.getXmlFile() : questionFile.getXml();
     }
 
     @Override

@@ -1,8 +1,8 @@
 package org.fenixedu.academic.domain.onlineTests;
 
-import java.nio.charset.StandardCharsets;
-
 import org.fenixedu.bennu.core.domain.User;
+
+import java.nio.charset.StandardCharsets;
 
 class QuestionFile extends QuestionFile_Base {
 
@@ -22,6 +22,19 @@ class QuestionFile extends QuestionFile_Base {
     public void delete() {
         setQuestion(null);
         super.delete();
+    }
+
+    private transient String xml = null;
+
+    public String getXml() {
+        if (xml == null) {
+            synchronized (this) {
+                if (xml == null) {
+                    xml = new String(getContent(), StandardCharsets.UTF_8);
+                }
+            }
+        }
+        return xml;
     }
 
 }
