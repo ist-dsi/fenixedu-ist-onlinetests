@@ -18,6 +18,8 @@
  */
 package org.fenixedu.academic.util.tests;
 
+import java.util.Arrays;
+
 public class ResponseLID extends Response {
 
     private String[] response;
@@ -65,5 +67,10 @@ public class ResponseLID extends Response {
             }
         }
         return false;
+    }
+    
+    @Override
+    public String toString() {
+        return Arrays.toString(getResponse());
     }
 }
