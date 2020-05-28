@@ -25,11 +25,14 @@ package org.fenixedu.academic.ui.struts.action.student.onlineTests;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +84,8 @@ import org.fenixedu.bennu.struts.annotations.Forwards;
 import org.fenixedu.bennu.struts.annotations.Mapping;
 import org.fenixedu.bennu.struts.portal.EntryPoint;
 import org.fenixedu.bennu.struts.portal.StrutsFunctionality;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pt.ist.fenixframework.FenixFramework;
 
@@ -103,6 +108,8 @@ import com.google.common.io.BaseEncoding;
         @Forward(name = "giveUpQuestion", path = "/student/onlineTests/giveUpQuestion.jsp") })
 public class StudentTestsAction extends FenixDispatchAction {
 
+    private static final Logger logger = LoggerFactory.getLogger(StudentTestsAction.class);
+    
     @EntryPoint
     public ActionForward viewStudentExecutionCoursesWithTests(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -328,6 +335,11 @@ public class StudentTestsAction extends FenixDispatchAction {
 
     public ActionForward doTest(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response)
             throws FenixActionException {
+        Stream<String> params =
+                request.getParameterMap().entrySet().stream()
+                        .flatMap(entry -> Arrays.stream(entry.getValue()).map(value -> entry.getKey() + "=" + value));
+        logger.info("StudentTestAction parameters: {}", params.collect(Collectors.joining("; ")));
+        
         final String objectCode = request.getParameter("objectCode");
         final Integer studentCode = new Integer(request.getParameter("studentCode"));
 
