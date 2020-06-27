@@ -43,6 +43,7 @@
 </logic:present>
 
 <html:form action="/studentTests">
+<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="Bearer <%= request.getAttribute("jwtAccessToken") %>"/>
 <html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="viewStudentExecutionCoursesWithTests"/>
 <html:submit bundle="HTMLALT_RESOURCES" altKey="submit.back" styleClass="inputbutton" property="back"><bean:message key="button.back"/></html:submit>
 </html:form>
