@@ -27,6 +27,16 @@
 <logic:present name="studentTestQuestionList">
 <logic:notEmpty name="studentTestQuestionList" >
 
+<script language="Javascript" type="text/javascript">
+function check4ByteUTF8(str){
+	if ( /[\u{10000}-\u{10FFFF}]/u.test(str.value) == true ) {
+		$(str).closest('input').addClass("alert-danger");
+	}else{
+		$(str).closest('input').removeClass("alert-danger");
+	}
+}
+</script>
+
 <bean:define id="testCode" value='<%=request.getParameter("testCode")%>'/>
 <bean:define id="pageType" value='<%=request.getParameter("pageType")%>'/>
 <span class="error"><!-- Error messages go here --><html:errors /></span>
@@ -172,9 +182,6 @@
 						</logic:equal>
 					</logic:notEmpty>
 					</logic:equal>
-					<logic:notEqual name="pageType" value="doTest">
-						<bean:define id="checkDisable" value="true"/>
-					</logic:notEqual>
 				<%} else if (((Integer)testType).intValue()==2 && testQuestion.getStudentSubQuestions().size()>1){%>
 					<logic:notEmpty name="testQuestion" property="response">
 						<logic:equal name="testQuestion" property="response.responsed" value="true">
@@ -182,6 +189,9 @@
 						</logic:equal>
 					</logic:notEmpty>
 				<%}%>
+				<logic:notEqual name="pageType" value="doTest">
+					<bean:define id="checkDisable" value="true"/>
+				</logic:notEqual>
 				<%if(((Integer)questionType).intValue()==1 ){ %> <%--QuestionType.LID--%>
 					<logic:equal name="indexOption" value="0">
 						<table><tr><td>
@@ -320,14 +330,14 @@
 						<bean:define id="maxchars" name="subQuestion" property="questionType.render.maxchars"/>
 						<logic:notEmpty name="subQuestion" property="questionType.render.columns">
 							<bean:define id="cols" name="subQuestion" property="questionType.render.columns"/>
-							<html:text alt="<%="question"+ optionOrder%>" maxlength="<%=maxchars.toString()%>" size="<%=cols.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>"/>
+							<html:text alt="<%="question"+ optionOrder%>" maxlength="<%=maxchars.toString()%>" size="<%=cols.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>" onchange="<%="check4ByteUTF8(this)"%>" styleClass="studentInputText"/>
 						</logic:notEmpty>
 						<logic:empty name="subQuestion" property="questionType.render.columns">
 							<bean:define id="textBoxSize" value="<%=maxchars.toString()%>"/>
 							<logic:greaterThan name="textBoxSize" value="100" >
 								<bean:define id="textBoxSize" value="100"/>
 							</logic:greaterThan>
-							<html:text alt="<%="question"+ optionOrder%>" maxlength="<%=maxchars.toString()%>" size="<%=textBoxSize%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>"/>
+							<html:text alt="<%="question"+ optionOrder%>" maxlength="<%=maxchars.toString()%>" size="<%=textBoxSize%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>" onchange="<%="check4ByteUTF8(this)"%>" styleClass="studentInputText"/>
 						</logic:empty>	
 					</logic:notEmpty>	
 					<logic:empty name="subQuestion" property="questionType.render.maxchars">
@@ -335,20 +345,20 @@
 							<bean:define id="rows" name="subQuestion" property="questionType.render.rows"/>
 							<logic:notEmpty name="subQuestion" property="questionType.render.columns">
 								<bean:define id="cols" name="subQuestion" property="questionType.render.columns"/>
-								<html:textarea alt="<%="question"+ optionOrder%>" rows="<%=rows.toString()%>" cols="<%=cols.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>"/>
+								<html:textarea alt="<%="question"+ optionOrder%>" rows="<%=rows.toString()%>" cols="<%=cols.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>" onchange="<%="check4ByteUTF8(this)"%>" styleClass="studentInputText"/>
 							</logic:notEmpty>
 							<logic:empty name="subQuestion" property="questionType.render.columns">
 
-								<html:textarea alt="<%="question"+ optionOrder%>" rows="<%=rows.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>"/>
+								<html:textarea alt="<%="question"+ optionOrder%>" rows="<%=rows.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>" onchange="<%="check4ByteUTF8(this)"%>" styleClass="studentInputText"/>
 							</logic:empty>
 						</logic:notEmpty>
 						<logic:empty name="subQuestion" property="questionType.render.rows">
 							<logic:notEmpty name="subQuestion" property="questionType.render.columns">
 								<bean:define id="cols" name="subQuestion" property="questionType.render.columns"/>
-								<html:textarea alt="<%="question"+ optionOrder%>" cols="<%=cols.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>"/>
+								<html:textarea alt="<%="question"+ optionOrder%>" cols="<%=cols.toString()%>" value="<%=questionValue.toString()%>" property='<%="question"+ optionOrder%>' disabled="<%=new Boolean(checkDisable).booleanValue()%>" onchange="<%="check4ByteUTF8(this)"%>" styleClass="studentInputText"/>
 							</logic:notEmpty>
 							<logic:empty name="subQuestion" property="questionType.render.columns">
-								<html:text  alt='<%="question"+ optionOrder%>' property='<%="question"+ optionOrder%>' value="<%=questionValue.toString()%>" disabled="<%=new Boolean(checkDisable).booleanValue()%>"/>
+								<html:text alt='<%="question"+ optionOrder%>' property='<%="question"+ optionOrder%>' value="<%=questionValue.toString()%>" disabled="<%=new Boolean(checkDisable).booleanValue()%>" onchange="<%="check4ByteUTF8(this)"%>" styleClass="studentInputText"/>
 							</logic:empty>
 						</logic:empty>
 					</logic:empty>
