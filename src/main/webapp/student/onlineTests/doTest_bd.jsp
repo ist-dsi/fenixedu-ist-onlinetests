@@ -85,23 +85,46 @@ response.setDateHeader ("Expires", 0);
 		</tr>
 	</table>	
 	<bean:define id="invalidCharConfirmationMessage"><bean:message key="message.confirm.submit.with.invalid.chars" bundle="ONLINE_TESTS_RESOURCES"/></bean:define>
+	<bean:define id="evaluationConfirmationMessage"><bean:message key="message.confirm.submit.evaluation.test" bundle="ONLINE_TESTS_RESOURCES"/></bean:define>
+	<bean:define id="messageConfirmSubmission"><bean:message key="message.confirm.submit.test" bundle="ONLINE_TESTS_RESOURCES"/></bean:define>
+
 	<script>
 		$("#testForm").submit(function(e){
-			var hasError = false;
+			var showMessage = false;
+			var message="";
 			$(".studentInputText").each(function(index){
 				if ( /[\u{10000}-\u{10FFFF}]/u.test($(this).val()) == true ) {
 					$(this).closest('input').addClass("alert-danger");
-					hasError = true;
+					showMessage = true;
+					message = '<%=invalidCharConfirmationMessage%>\n';
 				}else{
 					$(this).closest('input').removeClass("alert-danger");
 				}
 		    });
-		    if(hasError == true){
-		    	if(confirm('<%=invalidCharConfirmationMessage%>') == false){
+		    
+			if(<%=distributedTest.getTestType().getType() == org.fenixedu.academic.util.tests.TestType.EVALUATION%>){
+				showMessage = true;
+				message = message + '<%=evaluationConfirmationMessage%>\n';
+		    }
+		    
+		    if(showMessage == true){
+		    	message = message + '\n<%=messageConfirmSubmission%>';
+		    	if(confirm(message) == false){
 		    		e.preventDefault();
 		    	}
 		    }
+		    
+		    
 		});
+		
+		$(document).ready(function() {
+			  $(window).keydown(function(event){
+			    if(event.keyCode == 13) {
+			      event.preventDefault();
+			      return false;
+			    }
+			  });
+			});
 	</script>
 	</logic:notEmpty>
 </logic:present>
