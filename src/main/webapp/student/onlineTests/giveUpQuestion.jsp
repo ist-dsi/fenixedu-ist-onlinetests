@@ -25,7 +25,7 @@
 <jsp:include page="/includeMathJax.jsp" />
 <table>
 <html:form action="/studentTests">
-	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="Bearer <%= request.getAttribute("jwtAccessToken") %>"/>
+	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="<%= "Bearer" + request.getAttribute("jwtAccessToken") %>"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="giveUp"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.testCode" property="testCode" value='<%=request.getAttribute("testCode").toString()%>'/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.exerciseCode" property="exerciseCode" value='<%=request.getAttribute("exerciseCode").toString()%>'/>
@@ -37,7 +37,7 @@
 </html:form></td>
 
 <html:form action="/studentTests">
-	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="Bearer <%= request.getAttribute("jwtAccessToken") %>"/>
+	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="<%= "Bearer" + request.getAttribute("jwtAccessToken") %>"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="testsFirstPage"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.testCode" property="testCode" value='<%=request.getAttribute("testCode").toString()%>'/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.objectCode" property="objectCode" value='<%=request.getAttribute("objectCode").toString()%>'/>
