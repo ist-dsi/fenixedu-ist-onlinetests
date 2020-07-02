@@ -32,6 +32,7 @@
 	
 	<logic:notEmpty name="studentTestQuestionList" >
 	<html:form action="/studentTests">
+	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="<%= "Bearer" + request.getAttribute("jwtAccessToken") %>"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="testsFirstPage"/>
 
 	<logic:iterate id="testQuestion" name="studentTestQuestionList" type="org.fenixedu.academic.domain.onlineTests.StudentTestQuestion"/>

@@ -18,13 +18,14 @@
     along with FenixEdu Core.  If not, see <http://www.gnu.org/licenses/>.
 
 --%>
-<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %><html:xhtml/>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<html:xhtml/>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>	
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
 <jsp:include page="/includeMathJax.jsp" />
 <table>
 <html:form action="/studentTests">
-        
+	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="<%= "Bearer" + request.getAttribute("jwtAccessToken") %>"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="giveUp"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.testCode" property="testCode" value='<%=request.getAttribute("testCode").toString()%>'/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.exerciseCode" property="exerciseCode" value='<%=request.getAttribute("exerciseCode").toString()%>'/>
@@ -36,6 +37,7 @@
 </html:form></td>
 
 <html:form action="/studentTests">
+	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="<%= "Bearer" + request.getAttribute("jwtAccessToken") %>"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="testsFirstPage"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.testCode" property="testCode" value='<%=request.getAttribute("testCode").toString()%>'/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.objectCode" property="objectCode" value='<%=request.getAttribute("objectCode").toString()%>'/>
