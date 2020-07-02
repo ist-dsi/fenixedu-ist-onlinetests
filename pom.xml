@@ -19,7 +19,7 @@
 
     <properties>
         <version.com.google.guava.guava>21.0</version.com.google.guava.guava>
-        <version.commons-beanutils.commons-beanutils>1.9.3</version.commons-beanutils.commons-beanutils>
+        <version.commons-beanutils.commons-beanutils>1.9.4</version.commons-beanutils.commons-beanutils>
         <version.commons-collections.commons-collections>3.2.2</version.commons-collections.commons-collections>
         <version.commons-lang.commons-lang>2.6</version.commons-lang.commons-lang>
         <version.javax.faces.jsf-api>1.1_01</version.javax.faces.jsf-api>
