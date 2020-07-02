@@ -18,6 +18,8 @@
  */
 package org.fenixedu.academic.util.tests;
 
+import org.apache.commons.lang3.text.translate.UnicodeEscaper;
+
 public class ResponseSTR extends Response {
 
     private String response;
@@ -40,10 +42,31 @@ public class ResponseSTR extends Response {
     }
 
     public void setResponse(String op) {
-        response = op;
+        response = toValid3ByteUTF8String(op);
         if (op != null) {
             super.setResponsed();
         }
+    }
+    
+    public String toValid3ByteUTF8String(String s) {
+        final String LAST_3_BYTE_UTF_CHAR = "\uFFFF";
+        UnicodeEscaper escaper = new UnicodeEscaper();
+        final int length = s.length();
+        StringBuilder b = new StringBuilder(length);
+        for (int offset = 0; offset < length;) {
+            final int codepoint = s.codePointAt(offset);
+            if (codepoint > LAST_3_BYTE_UTF_CHAR.codePointAt(0)) {
+                b.append(escaper.translate(s.substring(offset, offset+Character.charCount(codepoint))));
+            } else {
+                if (Character.isValidCodePoint(codepoint)) {
+                    b.appendCodePoint(codepoint);
+                } else {
+                    b.append(escaper.translate(s.substring(offset, offset+Character.charCount(codepoint))));
+                }
+            }
+            offset += Character.charCount(codepoint);
+        }
+        return b.toString();
     }
 
     public Boolean getIsCorrect() {

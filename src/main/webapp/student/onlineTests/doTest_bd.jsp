@@ -29,6 +29,7 @@ response.setHeader("Cache-Control","no-cache");
 response.setHeader("Pragma","no-cache");
 response.setDateHeader ("Expires", 0);
 %>
+
 <bean:message key="message.onlineTest.info"/>
 <br/><br/>
 <logic:present name="studentTestQuestionList">
@@ -49,7 +50,7 @@ response.setDateHeader ("Expires", 0);
 	<bean:define id="studentCode" name="student" property="number"/>
 	<bean:define id="registration" name="testQuestion" property="student.externalId"/>
 	
-	<html:form action="/studentTests">
+	<html:form action="/studentTests" styleId="testForm">
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.jwt" property="Authorization" value="<%= "Bearer" + request.getAttribute("jwtAccessToken") %>"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.method" property="method" value="doTest"/>
 	<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.objectCode" property="objectCode" value="<%= objectCode.toString() %>"/>
@@ -83,6 +84,25 @@ response.setDateHeader ("Expires", 0);
 			<html:submit bundle="HTMLALT_RESOURCES" altKey="submit.back" styleClass="inputbutton" property="back"><bean:message key="button.back"/></html:submit></td></html:form>
 		</tr>
 	</table>	
+	<bean:define id="invalidCharConfirmationMessage"><bean:message key="message.confirm.submit.with.invalid.chars" bundle="ONLINE_TESTS_RESOURCES"/></bean:define>
+	<script>
+		$("#testForm").submit(function(e){
+			var hasError = false;
+			$(".studentInputText").each(function(index){
+				if ( /[\u{10000}-\u{10FFFF}]/u.test($(this).val()) == true ) {
+					$(this).closest('input').addClass("alert-danger");
+					hasError = true;
+				}else{
+					$(this).closest('input').removeClass("alert-danger");
+				}
+		    });
+		    if(hasError == true){
+		    	if(confirm('<%=invalidCharConfirmationMessage%>') == false){
+		    		e.preventDefault();
+		    	}
+		    }
+		});
+	</script>
 	</logic:notEmpty>
 </logic:present>
 <center>
