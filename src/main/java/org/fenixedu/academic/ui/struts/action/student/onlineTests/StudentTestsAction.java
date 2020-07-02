@@ -38,6 +38,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.JsonObject;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
@@ -79,6 +81,8 @@ import org.fenixedu.academic.util.tests.ResponseLID;
 import org.fenixedu.academic.util.tests.ResponseNUM;
 import org.fenixedu.academic.util.tests.ResponseSTR;
 import org.fenixedu.bennu.core.domain.User;
+import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.bennu.struts.annotations.Forward;
 import org.fenixedu.bennu.struts.annotations.Forwards;
 import org.fenixedu.bennu.struts.annotations.Mapping;
@@ -87,6 +91,7 @@ import org.fenixedu.bennu.struts.portal.StrutsFunctionality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.fenixedu.jwt.Tools;
 import pt.ist.fenixframework.FenixFramework;
 
 import com.google.common.io.BaseEncoding;
@@ -109,7 +114,16 @@ import com.google.common.io.BaseEncoding;
 public class StudentTestsAction extends FenixDispatchAction {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentTestsAction.class);
-    
+
+    @Override
+    public ActionForward execute(ActionMapping mapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        final JsonObject claim = new JsonObject();
+        claim.addProperty("username", Authenticate.getUser().getUsername());
+        final String jwtAccessToken = Tools.sign(SignatureAlgorithm.RS256, CoreConfiguration.getConfiguration().jwtPrivateKeyPath(), claim);
+        request.setAttribute("jwtAccessToken", jwtAccessToken);
+        return super.execute(mapping, actionForm, request, response);
+    }
+
     @EntryPoint
     public ActionForward viewStudentExecutionCoursesWithTests(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
