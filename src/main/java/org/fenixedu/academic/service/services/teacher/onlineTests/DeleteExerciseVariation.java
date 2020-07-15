@@ -65,28 +65,10 @@ public class DeleteExerciseVariation {
         }
 
         if (result.size() == 0) {
-            Question newQuestion = getNewQuestion(question);
-            for (TestQuestion testQuestion : question.getTestQuestionsSet()) {
-                if (newQuestion == null) {
-                    testQuestion.getTest().deleteTestQuestion(testQuestion);
-                } else {
-                    testQuestion.setQuestion(getNewQuestion(question));
-                }
-            }
             Metadata metadata = question.getMetadata();
-            if (question.getStudentTestsQuestionsSet() == null || question.getStudentTestsQuestionsSet().size() == 0) {
-                question.delete();
-                if (metadata.getQuestionsSet().size() <= 1) {
-                    metadata.delete();
-                } else if (metadata.getVisibleQuestions().size() == 0) {
-                    metadata.setVisibility(Boolean.FALSE);
-                }
-            } else {
-                if (metadata.getVisibleQuestions().size() <= 1) {
-                    metadata.setVisibility(Boolean.FALSE);
-                }
-                question.setVisibility(Boolean.FALSE);
-            }
+            question.replaceTestQuestions();
+            question.delete();
+            metadata.deleteIfHasNoQuestions();
         }
 
         return result;
@@ -107,18 +89,6 @@ public class DeleteExerciseVariation {
             return true;
         }
         return false;
-    }
-
-    private Question getNewQuestion(Question oldQuestion) {
-        Metadata metadata = oldQuestion.getMetadata();
-        if (metadata.getVisibleQuestions().size() > 1) {
-            for (Question question : metadata.getVisibleQuestions()) {
-                if (question.equals(oldQuestion)) {
-                    return question;
-                }
-            }
-        }
-        return null;
     }
 
     // Service Invokers migrated from Berserk

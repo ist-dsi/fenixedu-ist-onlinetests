@@ -88,14 +88,9 @@ public class ChangeStudentTestQuestion {
             distributedTestList = oldQuestion.findDistributedTests();
         } else {
             distributedTestList = new HashSet<DistributedTest>();
-
-            if (distributedTest == null) {
-                throw new InvalidArgumentsServiceException();
-            }
             distributedTestList.add(distributedTest);
 
         }
-        boolean canDelete = true;
         for (DistributedTest currentDistributedTest : distributedTestList) {
             Collection<StudentTestQuestion> studentsTestQuestionList = new ArrayList<StudentTestQuestion>();
 
@@ -122,10 +117,8 @@ public class ChangeStudentTestQuestion {
             List<InfoStudent> group = new ArrayList<InfoStudent>();
 
             for (StudentTestQuestion studentTestQuestion : studentsTestQuestionList) {
-                if (!compareDates(studentTestQuestion.getDistributedTest().getEndDate(), studentTestQuestion.getDistributedTest()
+                if (compareDates(studentTestQuestion.getDistributedTest().getEndDate(), studentTestQuestion.getDistributedTest()
                         .getEndHour())) {
-                    canDelete = false;
-                } else {
                     if (availableQuestions.size() == 0) {
                         availableQuestions.addAll(getNewQuestionList(metadata, oldQuestion));
                     }
@@ -165,31 +158,14 @@ public class ChangeStudentTestQuestion {
 
                     new StudentTestLog(studentTestQuestion.getDistributedTest(), studentTestQuestion.getStudent(), event, null);
                 }
-
             }
         }
 
         if (delete.booleanValue()) {
             metadata = oldQuestion.getMetadata();
-            if (metadata == null) {
-                throw new InvalidArgumentsServiceException();
-            }
-            removeOldTestQuestion(oldQuestion);
-            List<Question> metadataQuestions = metadata.getVisibleQuestions();
-
-            if (metadataQuestions != null && metadataQuestions.size() <= 1) {
-                metadata.setVisibility(Boolean.FALSE);
-            }
-
-            if (canDelete) {
-                oldQuestion.delete();
-                if (metadata.getQuestionsSet().size() == 0) {
-                    metadata.delete();
-                }
-            } else {
-                oldQuestion.setVisibility(Boolean.FALSE);
-            }
-
+            oldQuestion.replaceTestQuestions();
+            oldQuestion.delete();
+            metadata.deleteIfHasNoQuestions();
         }
         return Boolean.TRUE;
     }
@@ -231,26 +207,6 @@ public class ChangeStudentTestQuestion {
             return true;
         }
         return false;
-    }
-
-    private void removeOldTestQuestion(Question oldQuestion) {
-        Collection<TestQuestion> testQuestionOldList = oldQuestion.getTestQuestionsSet();
-        List<Question> availableQuestions = new ArrayList<Question>();
-        availableQuestions.addAll(oldQuestion.getMetadata().getVisibleQuestions());
-        availableQuestions.remove(oldQuestion);
-
-        Question newQuestion = getNewQuestion(availableQuestions);
-
-        if (newQuestion == null || newQuestion.equals(oldQuestion)) {
-            for (TestQuestion oldTestQuestion : testQuestionOldList) {
-                Test test = oldTestQuestion.getTest();
-                test.deleteTestQuestion(oldTestQuestion);
-            }
-        } else {
-            for (TestQuestion oldTestQuestion : testQuestionOldList) {
-                oldTestQuestion.setQuestion(newQuestion);
-            }
-        }
     }
 
     private String getNewStudentMark(DistributedTest dt, Registration s, double mark2Remove) {

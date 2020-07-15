@@ -19,10 +19,8 @@
 package org.fenixedu.academic.service.services.teacher.onlineTests;
 
 import org.fenixedu.academic.domain.onlineTests.DistributedTest;
-import org.fenixedu.academic.domain.onlineTests.Metadata;
 import org.fenixedu.academic.service.filter.ExecutionCourseLecturingTeacherAuthorizationFilter;
 import org.fenixedu.academic.service.services.exceptions.NotAuthorizedException;
-import org.fenixedu.bennu.core.domain.Bennu;
 
 import pt.ist.fenixframework.Atomic;
 import pt.ist.fenixframework.FenixFramework;
@@ -31,14 +29,6 @@ public class DeleteDistributedTest {
 
     protected void run(String executionCourseId, final String distributedTestId) {
         final DistributedTest distributedTest = FenixFramework.getDomainObject(distributedTestId);
-
-        for (Metadata metadata : Bennu.getInstance().getMetadatasSet()) {
-            if (metadata.getVisibility() != null && !metadata.getVisibility().booleanValue()
-                    && metadata.getQuestionsSet().size() == 0) {
-                metadata.delete();
-            }
-        }
-
         distributedTest.delete();
     }
 

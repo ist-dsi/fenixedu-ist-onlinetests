@@ -45,16 +45,38 @@ public class Question extends Question_Base {
         setQuestionFile(new QuestionFile(this, fileName, xmlFile));
     }
 
-    public void delete() {
-        setMetadata(null);
-        setRootDomainObject(null);
-        getStudentTestsQuestionsSet().clear();
-        getTestQuestionsSet().clear();
-        QuestionFile qf = getQuestionFile();
-        if (qf != null) {
-            qf.delete();
+    public void replaceTestQuestions() {
+        Question newQuestion = getMetadata().getVisibleQuestions().stream().filter(q -> !q.equals(this)).findAny().orElse(null);
+        getTestQuestionsSet().forEach(testQuestion -> {
+            if (newQuestion != null) {
+                testQuestion.setQuestion(newQuestion);
+            } else {
+                testQuestion.getTest().deleteTestQuestion(testQuestion);
+            }
+        });
+    }
+    
+    public void deleteIfNotUsed() {
+        if(!getVisibility() && getStudentTestsQuestionsSet().isEmpty()){
+            Metadata metadata = getMetadata();
+            delete();
+            metadata.deleteIfHasNoQuestions();
         }
-        super.deleteDomainObject();
+    }
+    
+    public void delete() {
+        getTestQuestionsSet().forEach(testQuestion -> testQuestion.getTest().deleteTestQuestion(testQuestion));
+        if (!getStudentTestsQuestionsSet().isEmpty()) {
+            setVisibility(false);
+        } else {
+            setMetadata(null);
+            setRootDomainObject(null);
+            QuestionFile qf = getQuestionFile();
+            if (qf != null) {
+                qf.delete();
+            }
+            super.deleteDomainObject();
+        }
     }
 
     public Set<DistributedTest> findDistributedTests() {
