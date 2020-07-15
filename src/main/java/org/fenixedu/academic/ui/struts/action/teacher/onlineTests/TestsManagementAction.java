@@ -801,10 +801,7 @@ public class TestsManagementAction extends ExecutionCourseBaseAction {
         if (distributedTest == null) {
             throw new FenixActionException();
         }
-        final Boolean canDelete =
-                (!(distributedTest.getTestType().getType().intValue() == TestType.EVALUATION && distributedTest.countResponses(
-                        null, true) != 0));
-        request.setAttribute("canDelete", canDelete);
+        request.setAttribute("canDelete", distributedTest.canBeDelete());
         request.setAttribute("distributedTestCode", distributedTestCode);
         return doForward(request, "prepareDeleteDistributedTest");
     }

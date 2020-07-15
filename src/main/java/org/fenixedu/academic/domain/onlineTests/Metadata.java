@@ -120,13 +120,29 @@ public class Metadata extends Metadata_Base {
         return null;
     }
 
-    public void delete() {
-        for (; !getQuestionsSet().isEmpty(); getQuestionsSet().iterator().next().delete()) {
-            ;
+    public void deleteIfHasNoQuestions() {
+        if (getVisibleQuestions().isEmpty()) {
+            if (!getQuestionsSet().isEmpty()) {
+                setVisibility(false);
+            } else {
+                setExecutionCourse(null);
+                setRootDomainObject(null);
+                super.deleteDomainObject();
+            }
         }
-        setExecutionCourse(null);
-        setRootDomainObject(null);
-        super.deleteDomainObject();
+    }
+
+    public void delete() {
+        for (Question question : getQuestionsSet()) {
+            question.delete();
+        }
+        if (!getQuestionsSet().isEmpty()) {
+            setVisibility(false);
+        } else {
+            setExecutionCourse(null);
+            setRootDomainObject(null);
+            super.deleteDomainObject();
+        }
     }
 
     public static Set<Metadata> findVisibleMetadataFromExecutionCourseNotOfTest(final ExecutionCourse executionCourse,

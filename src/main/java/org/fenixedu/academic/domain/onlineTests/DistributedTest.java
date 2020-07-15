@@ -24,12 +24,14 @@ package org.fenixedu.academic.domain.onlineTests;
 
 import org.fenixedu.academic.domain.EvaluationManagementLog;
 import org.fenixedu.academic.domain.ExecutionCourse;
+import org.fenixedu.academic.domain.exceptions.DomainException;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.util.Bundle;
 import org.fenixedu.academic.util.tests.Response;
 import org.fenixedu.academic.util.tests.TestType;
 import org.fenixedu.bennu.core.domain.Bennu;
+
 import pt.ist.fenixframework.FenixFramework;
 
 import java.util.*;
@@ -59,44 +61,35 @@ public class DistributedTest extends DistributedTest_Base {
         return evaluationTitle;
     }
 
+    public boolean canBeDelete() {
+        return getTestType().getType().intValue() != TestType.EVALUATION || countResponses(null, true) == 0;
+    }
+    
     public void delete() {
+        if (!canBeDelete()) {
+            throw new DomainException("error.delete.evaluationTestWithResponses");
+        }
         ExecutionCourse ec = getTestScope().getExecutionCourse();
         EvaluationManagementLog.createLog(ec, Bundle.MESSAGING, "log.executionCourse.evaluation.tests.distribution.removed",
                 getEvaluationTitle(), getBeginDateTimeFormatted(), ec.getName(), ec.getDegreePresentationString());
 
-        for (; !getDistributedTestQuestionsSet().isEmpty(); getDistributedTestQuestionsSet().iterator().next().delete()) {
-            ;
+        for (StudentTestQuestion studentTestQuestion : getDistributedTestQuestionsSet()) {
+                Question question = studentTestQuestion.getQuestion();
+                studentTestQuestion.delete();
+                question.deleteIfNotUsed();
         }
+        
         for (; !getStudentsLogsSet().isEmpty(); getStudentsLogsSet().iterator().next().delete()) {
             ;
         }
         if (getTestType().getType().intValue() == TestType.EVALUATION) {
             getOnlineTest().delete();
         }
-        deleteQuestions();
 
         setTestScope(null);
         setRootDomainObject(null);
 
         deleteDomainObject();
-    }
-
-    private void deleteQuestions() {
-        for (StudentTestQuestion studentTestQuestion : getDistributedTestQuestionsSet()) {
-            if (!studentTestQuestion.getQuestion().getVisibility()
-                    && !isInOtherDistributedTest(studentTestQuestion.getQuestion())) {
-                studentTestQuestion.getQuestion().delete();
-            }
-        }
-    }
-
-    private boolean isInOtherDistributedTest(Question question) {
-        for (StudentTestQuestion studentTestQuestion : question.getStudentTestsQuestionsSet()) {
-            if (!studentTestQuestion.getDistributedTest().equals(this)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public Calendar getBeginDate() {
