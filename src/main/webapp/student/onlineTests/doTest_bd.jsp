@@ -81,7 +81,8 @@ response.setDateHeader ("Expires", 0);
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.objectCode" property="objectCode" value="<%= objectCode.toString() %>"/>
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.testCode" property="testCode" value="<%= testCode.toString() %>"/>
 			<html:hidden bundle="HTMLALT_RESOURCES" altKey="hidden.student" property="student" value="<%= registration.toString() %>"/>
-			<html:submit bundle="HTMLALT_RESOURCES" altKey="submit.back" styleClass="inputbutton" property="back"><bean:message key="button.back"/></html:submit></td></html:form>
+			<bean:define id="messageConfirmCancelSubmission"><bean:message key="message.confirm.cancel.submit.test" bundle="ONLINE_TESTS_RESOURCES"/></bean:define>
+			<html:submit bundle="HTMLALT_RESOURCES" altKey="submit.back" styleClass="inputbutton" property="back" onclick="<%= "return confirm('"+ messageConfirmCancelSubmission +"');"%>"><bean:message key="button.back"/></html:submit></td></html:form>
 		</tr>
 	</table>	
 	<bean:define id="invalidCharConfirmationMessage"><bean:message key="message.confirm.submit.with.invalid.chars" bundle="ONLINE_TESTS_RESOURCES"/></bean:define>
